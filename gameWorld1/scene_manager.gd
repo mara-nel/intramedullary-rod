@@ -8,7 +8,7 @@ var UP_EDGE = 8
 #trying to prevent double transfers
 #will do so by adding a 'last transferred' time and make sure that the difference is non tiny
 var time_of_last_transfer = 0
-var MIN_TIME = 20 # in milliseconds
+var MIN_TIME = 50 # in milliseconds
 
 #checks if "Game" is current scene, opposed to maybe a pause or something
 func is_game():

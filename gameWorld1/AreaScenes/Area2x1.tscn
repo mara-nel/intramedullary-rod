@@ -4,8 +4,6 @@
 [ext_resource path="res://Transferers/DownTransfer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Transferers/LeftTransfer.tscn" type="PackedScene" id=3]
 
-
-
 [node name="Area2x1" type="Node" groups=[
 "mapTile",
 ]]
@@ -32,12 +30,11 @@ tile_data = IntArray( 0, 3, 1, 3, 2, 1, 3, 1, 4, 1, 5, 1, 6, 1, 7, 1, 8, 1, 9, 1
 
 [node name="DownTransfer" parent="Transferers" instance=ExtResource( 2 )]
 
-transform/pos = Vector2( 0, 192 )
+transform/pos = Vector2( 0, 200 )
 target_level = "res://AreaScenes/Area2x0.tscn"
 
 [node name="LeftTransfer" parent="Transferers" instance=ExtResource( 3 )]
 
-transform/pos = Vector2( 0, 96 )
 target_level = "res://AreaScenes/Area1x1.tscn"
 
 

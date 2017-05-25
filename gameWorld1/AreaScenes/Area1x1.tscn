@@ -7,13 +7,13 @@
 [ext_resource path="res://Marnemy.tscn" type="PackedScene" id=5]
 [ext_resource path="res://warper.tscn" type="PackedScene" id=6]
 
-[sub_resource type="NavigationPolygon" id=2]
+[sub_resource type="NavigationPolygon" id=1]
 
-vertices = Vector2Array( -112, 64, 96, 48, 112, 48, 112, 112, 32, 112, 96, 0, -112, 16, 0, 0, -192, -48, 0, -48, -160, 16, -192, 112, -160, 64, -112, 112, 32, 128, -112, 128 )
-polygons = [ IntArray( 0, 1, 2, 3, 4 ), IntArray( 5, 1, 0, 6, 7 ), IntArray( 8, 9, 7, 6, 10 ), IntArray( 11, 8, 10, 12 ), IntArray( 13, 11, 12, 0 ), IntArray( 13, 0, 4, 14 ), IntArray( 13, 14, 15 ) ]
-outlines = [ Vector2Array( -192, -48, -192, 112, -112, 112, -112, 128, 32, 128, 32, 112, 112, 112, 112, 48, 96, 48, 96, 0, 0, 0, 0, -48 ), Vector2Array( -112, 16, -112, 64, -160, 64, -160, 16 ) ]
+vertices = Vector2Array( 96, 128, 280, 104, 296, 104, 296, 168, 221, 168, 280, 56, 96, 64, 200, 56, 16, 16, 200, 16, 40, 64, 32, 64, 16, 168, 32, 128, 88, 168, 221, 176, 88, 176 )
+polygons = [ IntArray( 0, 1, 2, 3, 4 ), IntArray( 5, 1, 0, 6, 7 ), IntArray( 8, 9, 7, 6, 10 ), IntArray( 8, 10, 11 ), IntArray( 12, 8, 11, 13 ), IntArray( 14, 12, 13, 0 ), IntArray( 14, 0, 4, 15, 16 ) ]
+outlines = [ Vector2Array( 16, 16, 16, 168, 88, 168, 88, 176, 221, 176, 221, 168, 296, 168, 296, 104, 280, 104, 280, 56, 200, 56, 200, 16 ), Vector2Array( 32, 64, 32, 128, 96, 128, 96, 64, 40, 64 ) ]
 
-[sub_resource type="Curve2D" id=1]
+[sub_resource type="Curve2D" id=2]
 
 bake_interval = 5.0
 _data = {
@@ -49,6 +49,7 @@ editor/display_folded = true
 
 [node name="DownTransfer" parent="Transferers" instance=ExtResource( 2 )]
 
+transform/pos = Vector2( 0, 200 )
 target_level = "res://AreaScenes/Area1x0.tscn"
 
 [node name="LeftTransfer" parent="Transferers" instance=ExtResource( 3 )]
@@ -63,11 +64,7 @@ target_level = "res://AreaScenes/Area2x1.tscn"
 
 [node name="Marnemy 2" parent="Enemies" instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 104, 144 )
-
-[node name="Marnemy3" parent="Enemies" instance=ExtResource( 5 )]
-
-transform/pos = Vector2( 200, 88 )
+transform/pos = Vector2( 153.944, 140.189 )
 
 [node name="enterWarp" parent="." instance=ExtResource( 6 )]
 
@@ -81,22 +78,20 @@ transform/pos = Vector2( 248, 48 )
 
 [node name="Navigation2D" type="Navigation2D" parent="."]
 
-transform/pos = Vector2( 200, 56 )
+editor/display_folded = true
 
 [node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Navigation2D"]
 
-navpoly = SubResource( 2 )
+transform/pos = Vector2( 3, 0 )
+navpoly = SubResource( 1 )
 enabled = true
 
 [node name="paths" type="Node" parent="."]
 
-editor/display_folded = true
-
 [node name="cavePath" type="Path2D" parent="paths"]
 
-editor/display_folded = true
 transform/pos = Vector2( 136, -8 )
-curve = SubResource( 1 )
+curve = SubResource( 2 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="paths/cavePath"]
 

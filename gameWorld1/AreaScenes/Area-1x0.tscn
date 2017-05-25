@@ -4,7 +4,6 @@
 [ext_resource path="res://Transferers/RightTransfer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Transferers/UpTransfer.tscn" type="PackedScene" id=3]
 
-
 [node name="Area-1x0" type="Node" groups=[
 "mapTile",
 ]]
@@ -35,6 +34,7 @@ target_level = "res://AreaScenes/Area0x0.tscn"
 
 [node name="UpTransfer" parent="Transferers" instance=ExtResource( 3 )]
 
+transform/pos = Vector2( 160, -16 )
 target_level = "res://AreaScenes/Area-1x1.tscn"
 
 

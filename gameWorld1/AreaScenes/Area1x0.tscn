@@ -1,9 +1,31 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=9 format=1]
 
 [ext_resource path="res://Map1TileSet.xml" type="TileSet" id=1]
 [ext_resource path="res://Transferers/LeftTransfer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Transferers/UpTransfer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Transferers/RightTransfer.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Marnemy.tscn" type="PackedScene" id=5]
+
+[sub_resource type="Curve2D" id=1]
+
+bake_interval = 5.0
+_data = {
+"points": Vector2Array( 0, 0, 0, 0, 88, 72, 0, 0, 0, 0, 168, 72, 0, 0, 0, 0, 168, 120, 0, 0, 0, 0, 88, 120, 0, 0, 0, 0, 88, 72 )
+}
+
+[sub_resource type="Curve2D" id=2]
+
+bake_interval = 5.0
+_data = {
+"points": Vector2Array( 0, 0, 0, 0, 136, 8, 0, 0, 0, 0, 136, 56, 0, 0, 0, 0, 216, 56, 0, 0, 0, 0, 216, 8, 0, 0, 0, 0, 136, 8 )
+}
+
+[sub_resource type="Curve2D" id=3]
+
+bake_interval = 5.0
+_data = {
+"points": Vector2Array( 0, 0, 0, 0, 248, 88, 0, 0, 0, 0, 200, 88, 0, 0, 0, 0, 200, 168, 0, 0, 0, 0, 248, 168, 0, 0, 0, 0, 248, 88 )
+}
 
 [node name="Area1x0" type="Node" groups=[
 "mapTile",
@@ -29,17 +51,78 @@ tile_data = IntArray( 0, 3, 1, 3, 2, 3, 3, 3, 4, 3, 5, 1, 6, 1, 7, 1, 8, 1, 9, 1
 
 [node name="Transferers" type="Node" parent="."]
 
+editor/display_folded = true
+
 [node name="LeftTransfer" parent="Transferers" instance=ExtResource( 2 )]
 
 target_level = "res://AreaScenes/Area0x0.tscn"
 
 [node name="UpTransfer" parent="Transferers" instance=ExtResource( 3 )]
 
+transform/pos = Vector2( 160, -16 )
 target_level = "res://AreaScenes/Area1x1.tscn"
 
 [node name="RightTransfer" parent="Transferers" instance=ExtResource( 4 )]
 
-transform/pos = Vector2( 336, 96 )
 target_level = "res://AreaScenes/Area2x0.tscn"
+
+[node name="Node" type="Node" parent="."]
+
+[node name="LeftSquare" type="Path2D" parent="Node"]
+
+curve = SubResource( 1 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Node/LeftSquare"]
+
+transform/pos = Vector2( 88, 72 )
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = false
+cubic_interp = true
+loop = true
+lookahead = 4.0
+
+[node name="Marnemy" parent="Node/LeftSquare/PathFollow2D" instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 0, 0 )
+
+[node name="UpSquare" type="Path2D" parent="Node"]
+
+curve = SubResource( 2 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Node/UpSquare"]
+
+transform/pos = Vector2( 214.834, 9.63377 )
+offset = 171.91
+h_offset = 0.0
+v_offset = 0.0
+rotate = false
+cubic_interp = true
+loop = true
+lookahead = 4.0
+
+[node name="Marnemy" parent="Node/UpSquare/PathFollow2D" instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 0, 0 )
+
+[node name="RightSquare" type="Path2D" parent="Node"]
+
+curve = SubResource( 3 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Node/RightSquare"]
+
+transform/pos = Vector2( 248, 88 )
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = false
+cubic_interp = true
+loop = true
+lookahead = 4.0
+
+[node name="Marnemy" parent="Node/RightSquare/PathFollow2D" instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 0, 0 )
 
 
