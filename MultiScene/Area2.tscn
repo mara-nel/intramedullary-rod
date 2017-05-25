@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://FloorTiles.xml" type="TileSet" id=1]
+[ext_resource path="res://warper.tscn" type="PackedScene" id=2]
+
+[node name="Area2" type="Node" groups=[
+"level",
+]]
+
+[node name="TileMap" type="TileMap" parent="."]
+
+mode = 0
+tile_set = ExtResource( 1 )
+cell/size = Vector2( 16, 16 )
+cell/quadrant_size = 16
+cell/custom_transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+cell/half_offset = 2
+cell/tile_origin = 0
+cell/y_sort = false
+collision/use_kinematic = false
+collision/friction = 1.0
+collision/bounce = 0.0
+collision/layers = 1
+collision/mask = 1
+occluder/light_mask = 1
+tile_data = IntArray( 0, 4, 1, 7, 65536, 0, 65537, 2, 65540, 4, 65541, 6, 65542, 6, 65543, 5, 65544, 6, 65545, 5, 65546, 6, 65547, 6, 65548, 5, 65549, 6, 65550, 7, 131072, 0, 131073, 2, 131077, 0, 131078, 1, 131079, 1, 131080, 1, 131081, 1, 131082, 1, 131083, 1, 131084, 1, 131085, 2, 196608, 0, 196609, 2, 196613, 0, 196614, 1, 196615, 1, 196616, 1, 196617, 1, 196618, 1, 196619, 1, 196620, 1, 196621, 2, 262144, 0, 262145, 2, 262149, 0, 262150, 1, 262151, 1, 262152, 1, 262153, 1, 262154, 1, 262155, 1, 262156, 1, 262157, 2, 327680, 0, 327681, 2, 327684, 4, 327685, 6, 327686, 6, 327687, 6, 327688, 6, 327689, 6, 327690, 6, 327691, 6, 327692, 1, 327693, 2, 393216, 0, 393217, 2, 393218, 4, 393219, 5, 393220, 6, 393221, 6, 393222, 5, 393223, 6, 393224, 5, 393225, 7, 393227, 0, 393228, 2, 393229, 6, 393230, 5, 458752, 0, 458753, 1, 458754, 1, 458755, 1, 458756, 1, 458757, 1, 458758, 1, 458759, 1, 458760, 1, 458761, 2, 458762, 4, 458763, 0, 458764, 2, 524288, 0, 524289, 1, 524290, 1, 524291, 1, 524292, 1, 524293, 1, 524294, 1, 524295, 1, 524296, 1, 524297, 1, 524298, 1, 524299, 1, 524300, 2, 589824, 6, 589825, 6, 589826, 6, 589827, 6, 589828, 6, 589829, 6, 589830, 6, 589831, 6, 589832, 6, 589833, 6, 589834, 6, 589835, 6, 589836, 6, 589837, 7 )
+
+[node name="area2_enter" type="Position2D" parent="."]
+
+transform/pos = Vector2( 15.5296, 72.1479 )
+
+[node name="warper" parent="." instance=ExtResource( 2 )]
+
+transform/pos = Vector2( 15.1758, 125.825 )
+target_level = "res://Area1.tscn"
+target_warp = "area1_enter"
+
+
