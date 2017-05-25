@@ -43,7 +43,6 @@ func make_transfer_target(directionGoing, curPos):
 
 func do_transfer(wr, level, target_pos):
 	move_player(target_pos)	
-	
 	free_referenced(wr)
 	
 	var new_level = ResourceLoader.load(level).instance()
@@ -56,7 +55,7 @@ func do_transfer(wr, level, target_pos):
 
 func move_player(target_pos):
 	for body in get_tree().get_nodes_in_group("player"):
-		body.set_pos(target_pos)
+		body.set_global_pos(target_pos)
 		break
 
 # if the weak reference references something alive (the current level) it frees it

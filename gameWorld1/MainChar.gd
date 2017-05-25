@@ -34,7 +34,8 @@ func _fixed_process(delta):
 	#provides a slide feature for movement along a wall
 	if(is_colliding()):
 		# good for testing whats being collided with
-		#print(get_collider().get_name())
+		print(get_collider().get_name())
+		print("collision at: "+str(get_pos().x)+ " " + str(get_pos().y))
 		var n = get_collision_normal()
 		motion = n.slide(motion)
 		velocity = n.slide(velocity)
