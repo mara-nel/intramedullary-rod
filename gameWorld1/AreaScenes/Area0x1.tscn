@@ -1,16 +1,17 @@
-[gd_scene load_steps=7 format=1]
+[gd_scene load_steps=8 format=1]
 
 [ext_resource path="res://Map1TileSet.xml" type="TileSet" id=1]
 [ext_resource path="res://Transferers/DownTransfer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Transferers/RightTransfer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Transferers/LeftTransfer.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Marnemy.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Transferers/UpTransfer.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Marnemy.tscn" type="PackedScene" id=6]
 
 [sub_resource type="NavigationPolygon" id=1]
 
-vertices = Vector2Array( 264, 40, 304, 16, 304, 72, 304, 152, 304, 168, 16, 168, 16, 96, 40, 96, 304, 120, 304, 104, 216, 40, 40, 40, 56, 40, 56, 16, 224, 16, 241.788, 26.6731 )
-polygons = [ IntArray( 0, 1, 2 ), IntArray( 3, 4, 5, 6, 7 ), IntArray( 8, 3, 7 ), IntArray( 9, 8, 7 ), IntArray( 0, 2, 9, 7, 10 ), IntArray( 7, 11, 12 ), IntArray( 10, 7, 12 ), IntArray( 10, 12, 13, 14 ), IntArray( 1, 0, 15 ), IntArray( 1, 15, 14 ), IntArray( 14, 13, 1 ) ]
-outlines = [ Vector2Array( 56, 16, 304, 16, 304, 72, 304, 104, 304, 120, 304, 152, 304, 160, 16, 160, 16, 96, 40, 96, 40, 40, 56, 40 ), Vector2Array( 216, 40, 264, 40, 264, 16, 216, 16 ) ]
+vertices = Vector2Array( 56, 40, 56, 16, 216, 16, 216, 40, 264, 40, 264, 16, 304, 16, 304, 72, 304, 152, 304, 160, 16, 160, 16, 96, 40, 96, 304, 120, 304, 104, 40, 40 )
+polygons = [ IntArray( 0, 1, 2, 3 ), IntArray( 4, 5, 6, 7 ), IntArray( 8, 9, 10, 11, 12 ), IntArray( 13, 8, 12 ), IntArray( 14, 13, 12 ), IntArray( 4, 7, 14, 12, 3 ), IntArray( 0, 3, 12 ), IntArray( 0, 12, 15 ) ]
+outlines = [ Vector2Array( 56, 16, 216, 16, 216, 40, 264, 40, 264, 16, 304, 16, 304, 72, 304, 104, 304, 120, 304, 152, 304, 160, 16, 160, 16, 96, 40, 96, 40, 40, 56, 40 ) ]
 
 [node name="Area0x1" type="Node" groups=[
 "mapTile",
@@ -40,7 +41,6 @@ editor/display_folded = true
 
 [node name="DownTransfer" parent="Transferers" instance=ExtResource( 2 )]
 
-transform/pos = Vector2( 0, 200 )
 target_level = "res://AreaScenes/Area0x0.tscn"
 
 [node name="RightTransfer" parent="Transferers" instance=ExtResource( 3 )]
@@ -51,17 +51,23 @@ target_level = "res://AreaScenes/Area1x1.tscn"
 
 target_level = "res://AreaScenes/Area-1x1.tscn"
 
+[node name="UpTransfer" parent="Transferers" instance=ExtResource( 5 )]
+
+target_level = "res://AreaScenes/Area0x2.tscn"
+
 [node name="Enemies" type="Node" parent="."]
 
-[node name="Marnemy" parent="Enemies" instance=ExtResource( 5 )]
+editor/display_folded = true
+
+[node name="Marnemy" parent="Enemies" instance=ExtResource( 6 )]
 
 transform/pos = Vector2( 56, 136 )
 
-[node name="Marnemy1" parent="Enemies" instance=ExtResource( 5 )]
+[node name="Marnemy1" parent="Enemies" instance=ExtResource( 6 )]
 
 transform/pos = Vector2( 200, 48 )
 
-[node name="Marnemy2" parent="Enemies" instance=ExtResource( 5 )]
+[node name="Marnemy2" parent="Enemies" instance=ExtResource( 6 )]
 
 transform/pos = Vector2( 248, 128 )
 

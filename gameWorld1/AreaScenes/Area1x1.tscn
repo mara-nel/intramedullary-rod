@@ -1,11 +1,12 @@
-[gd_scene load_steps=9 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://Map1TileSet.xml" type="TileSet" id=1]
 [ext_resource path="res://Transferers/DownTransfer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Transferers/LeftTransfer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Transferers/RightTransfer.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Marnemy.tscn" type="PackedScene" id=5]
-[ext_resource path="res://warper.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Transferers/UpTransfer.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Marnemy.tscn" type="PackedScene" id=6]
+[ext_resource path="res://warper.tscn" type="PackedScene" id=7]
 
 [sub_resource type="NavigationPolygon" id=1]
 
@@ -45,11 +46,8 @@ tile_data = IntArray( 0, 1, 1, 1, 2, 1, 3, 1, 4, 1, 5, 1, 6, 1, 7, 1, 8, 1, 9, 1
 
 [node name="Transferers" type="Node" parent="."]
 
-editor/display_folded = true
-
 [node name="DownTransfer" parent="Transferers" instance=ExtResource( 2 )]
 
-transform/pos = Vector2( 0, 200 )
 target_level = "res://AreaScenes/Area1x0.tscn"
 
 [node name="LeftTransfer" parent="Transferers" instance=ExtResource( 3 )]
@@ -60,13 +58,17 @@ target_level = "res://AreaScenes/Area0x1.tscn"
 
 target_level = "res://AreaScenes/Area2x1.tscn"
 
+[node name="UpTransfer" parent="Transferers" instance=ExtResource( 5 )]
+
+target_level = "res://AreaScenes/Area1x2.tscn"
+
 [node name="Enemies" type="Node" parent="."]
 
-[node name="Marnemy 2" parent="Enemies" instance=ExtResource( 5 )]
+[node name="Marnemy 2" parent="Enemies" instance=ExtResource( 6 )]
 
 transform/pos = Vector2( 153.944, 140.189 )
 
-[node name="enterWarp" parent="." instance=ExtResource( 6 )]
+[node name="enterWarp" parent="." instance=ExtResource( 7 )]
 
 transform/pos = Vector2( 248, 32 )
 target_level = "res://Cave1.tscn"
@@ -104,7 +106,7 @@ cubic_interp = true
 loop = true
 lookahead = 4.0
 
-[node name="Marnemy" parent="paths/cavePath/PathFollow2D" instance=ExtResource( 5 )]
+[node name="Marnemy" parent="paths/cavePath/PathFollow2D" instance=ExtResource( 6 )]
 
 transform/pos = Vector2( 0, 0 )
 

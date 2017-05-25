@@ -2,7 +2,6 @@
 
 [ext_resource path="res://Transferers/DownTransfer.gd" type="Script" id=1]
 
-
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
@@ -15,7 +14,7 @@ extents = Vector2( 160, 8 )
 transform/pos = Vector2( 0, 192 )
 input/pickable = true
 shapes/0/shape = SubResource( 1 )
-shapes/0/transform = Matrix32( 1, 0, 0, 1, 160, 8 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 160, 16 )
 shapes/0/trigger = false
 gravity_vec = Vector2( 0, 1 )
 gravity = 98.0
@@ -26,7 +25,7 @@ target_level = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
-transform/pos = Vector2( 160, 8 )
+transform/pos = Vector2( 160, 16 )
 shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0

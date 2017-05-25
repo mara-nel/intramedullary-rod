@@ -87,4 +87,5 @@ func do_warp(wr, level, warp):
 	var target = new_level.find_node(warp)
 	if(target extends Position2D):
 		move_player(target.get_pos())
-		
+	
+	print("warped?")

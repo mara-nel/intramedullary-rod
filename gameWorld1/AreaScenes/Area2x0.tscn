@@ -34,7 +34,6 @@ target_level = "res://AreaScenes/Area1x0.tscn"
 
 [node name="UpTransfer" parent="Transferers" instance=ExtResource( 3 )]
 
-transform/pos = Vector2( 160, -16 )
 target_level = "res://AreaScenes/Area2x1.tscn"
 
 
