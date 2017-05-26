@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 var velocity = Vector2()
-var walkSpeed = 75
+var walkSpeed = 125
 var runSpeed = 100
 var direction = Vector2()
 
@@ -41,7 +41,9 @@ func _ready():
 
 func _input(event):
 	if(event.is_action_pressed("ui_select") and not event.is_echo()):
-		print(str(get_pos().x) +" "+str(get_pos().y))
+		print(str(get_pos()))
+	if(event.is_action("left_click")):
+		set_pos(get_viewport().get_mouse_pos())
 	
 	if(event.is_action_pressed("ui_down") and not event.is_echo()):
 		lastPressed = SOUTH
@@ -80,12 +82,15 @@ func _fixed_process(delta):
 	#provides a slide feature for movement along a wall
 	if(is_colliding()):
 		# good for testing whats being collided with
-#		print(get_collider().get_name())
-#		print("collision at: "+str(get_pos().x)+ " " + str(get_pos().y))
+		print(get_collider().get_name())
+		print("collision at: "+str(get_pos()))
 		var n = get_collision_normal()
 		motion = n.slide(motion)
 		velocity = n.slide(velocity)
 		move(motion)
+	if(weapon.is_colliding()):
+		print("*hammer has hit: " + get_collider().get_name())
+		
 
 func set_direction(dir):
 	direction = dir

@@ -2,7 +2,6 @@
 
 [ext_resource path="res://Transferers/LeftTransfer.gd" type="Script" id=1]
 
-
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
@@ -12,7 +11,7 @@ extents = Vector2( 8, 96 )
 "transferer",
 ]]
 
-transform/pos = Vector2( 0, 96 )
+transform/pos = Vector2( -8, 96 )
 input/pickable = true
 shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, -8, 0 )

@@ -25,6 +25,8 @@ func _ready():
 func _fixed_process(delta):
 	if(is_hidden()):
 		turnOffColliders()
+	if(is_colliding()):
+		print("-hammer has hit: " + get_collider().get_name())
 
 #sets the sprite frame to face correct direction and turns on corresponding collider
 func change_direction(direction):
@@ -46,3 +48,4 @@ func turnOffColliders():
 	for child in get_children():
 		if (child.get_type() == "CollisionPolygon2D"):
 			child.set_trigger(true) #turns it off
+		

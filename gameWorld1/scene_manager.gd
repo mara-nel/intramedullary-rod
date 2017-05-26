@@ -8,7 +8,7 @@ var UP_EDGE = 8
 #trying to prevent double transfers
 #will do so by adding a 'last transferred' time and make sure that the difference is non tiny
 var time_of_last_transfer = 0
-var MIN_TIME = 50 # in milliseconds
+var MIN_TIME = 40 # in milliseconds
 
 #checks if "Game" is current scene, opposed to maybe a pause or something
 func is_game():
@@ -42,20 +42,29 @@ func make_transfer_target(directionGoing, curPos):
 		return Vector2(curPos.x, UP_EDGE)
 
 func do_transfer(wr, level, target_pos):
-	move_player(target_pos)	
+	#move_player(target_pos)
 	free_referenced(wr)
 	
 	var new_level = ResourceLoader.load(level).instance()
 	var game = get_tree().get_current_scene()
 	
+	move_player(target_pos)
+	
 	new_level.add_to_group("mapTile")
 	game.add_child(new_level)
 	#game.set_camera_limits(new_level.map_size)
 	
-
+	
 func move_player(target_pos):
 	for body in get_tree().get_nodes_in_group("player"):
-		body.set_global_pos(target_pos)
+		#body.get_collider().set_trigger(true)
+		#if(body.test_move(target_pos)):
+		#body.set_global_pos(target_pos)
+		body.set_pos(target_pos)
+#			body.set_layer_mask_bit(0, false)
+#			body.set_collision_mask_bit(0, false)
+#			print(body.get_name())
+		print("~moving~ to " +str(body.get_pos()))
 		break
 
 # if the weak reference references something alive (the current level) it frees it
@@ -86,5 +95,3 @@ func do_warp(wr, level, warp):
 	var target = new_level.find_node(warp)
 	if(target extends Position2D):
 		move_player(target.get_pos())
-	
-	print("warped?")
