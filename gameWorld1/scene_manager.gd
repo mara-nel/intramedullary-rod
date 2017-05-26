@@ -57,13 +57,7 @@ func do_transfer(wr, level, target_pos):
 	
 func move_player(target_pos):
 	for body in get_tree().get_nodes_in_group("player"):
-		#body.get_collider().set_trigger(true)
-		#if(body.test_move(target_pos)):
-		#body.set_global_pos(target_pos)
 		body.set_pos(target_pos)
-#			body.set_layer_mask_bit(0, false)
-#			body.set_collision_mask_bit(0, false)
-#			print(body.get_name())
 		print("~moving~ to " +str(body.get_pos()))
 		break
 
