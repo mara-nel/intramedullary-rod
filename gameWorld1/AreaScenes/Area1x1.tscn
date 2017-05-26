@@ -77,10 +77,10 @@ target_warp = "cave1Entrance"
 [node name="cave1Exit" type="Position2D" parent="."]
 
 transform/pos = Vector2( 248, 48 )
+transform/rot = -0.2
+transform/scale = Vector2( 1, 1.4 )
 
 [node name="Navigation2D" type="Navigation2D" parent="."]
-
-editor/display_folded = true
 
 [node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Navigation2D"]
 
