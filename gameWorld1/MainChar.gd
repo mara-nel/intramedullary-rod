@@ -19,11 +19,17 @@ var EAST = Vector2(1,0)
 
 var directionDict = { NORTH: UP, SOUTH: DOWN, WEST:LEFT, EAST: RIGHT }
 
+# given compass direction, gives the vector of where the weapon should live
+# quite possible that this should be dependent on what the weapon is, maybe I
+# should have this live with each weapon
+#var weaponPosDict = { NORTH: 
+
 #used to keep track of which direction was most recently pressed
 var lastPressed = SOUTH
 
 
 var sprite
+var weapon
 
 func _ready():
 	# Called every time the node is added to the scene.
@@ -31,6 +37,7 @@ func _ready():
 	set_fixed_process(true)
 	set_process_input(true)
 	sprite = get_node("Sprite")
+	weapon = get_node("Hammer")
 
 func _input(event):
 	if(event.is_action_pressed("ui_select") and not event.is_echo()):
@@ -47,6 +54,9 @@ func _input(event):
 	
 func _fixed_process(delta):
 	velocity = Vector2()
+	weapon.hide()
+	if(Input.is_action_pressed("ui_accept")):
+		weapon.show()
 	
 	var numbPresses = numberOfDirectionsPressed()
 	if(numbPresses > 1):
@@ -80,7 +90,9 @@ func _fixed_process(delta):
 func set_direction(dir):
 	direction = dir
 	sprite.set_frame(directionDict[direction])
-
+	weapon.change_direction(directionDict[direction])
+	weapon.set_pos(10*direction)
+	
 func set_velocity():
 	velocity = direction * walkSpeed
 	

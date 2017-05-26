@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=1]
+[gd_scene load_steps=5 format=1]
 
 [ext_resource path="res://MainChar.gd" type="Script" id=1]
 [ext_resource path="res://charRevisedSides.tex" type="Texture" id=2]
+[ext_resource path="res://Hammer.tscn" type="PackedScene" id=3]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 
@@ -35,5 +36,9 @@ build_mode = 0
 polygon = Vector2Array( -4.29235, 0.784249, -3.98893, -0.981106, 4.03792, -1.00869, 3.95517, 6.57682, 3.59658, 7.65259, 0.97613, 8.03876, -1.09265, 8.03876, -3.46484, 7.73534, -4.01652, 6.4389 )
 shape_range = Vector2( 0, 0 )
 trigger = false
+
+[node name="Hammer" parent="." instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 0.0460701, 11.7017 )
 
 

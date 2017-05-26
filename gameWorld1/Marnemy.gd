@@ -46,9 +46,9 @@ func _fixed_process(delta):
 			# turns around if it hits something
 			if(is_colliding()):
 				direction = getNewDirection()
+				print(get_collider().get_name())
 			elif(OS.get_unix_time()- timeOfLastDirectionChange > minDirectionChangeTime):
 				direction = getNewDirection()
-				print("timeout")
 			velocity = direction*walkSpeed*delta
 			
 #			if(Input.is_action_pressed("ui_accept")):
