@@ -34,18 +34,14 @@ func change_direction(direction):
 	sprite.set_frame(direction)
 	if direction in directionColliderDict:
 		get_node(directionColliderDict[direction]).set_trigger(false)
-#	if(direction == UP):
-#		get_node("UpCollsion").set_trigger(false)
-#	elif(direction == DOWN):
-#		get_node("DownCollsion").set_trigger(false)
-#	elif(direction == LEFT):
-#		get_node("LeftCollsion").set_trigger(false)
-#	elif(direction == RIGHT):
-#		get_node("RightCollision").set_trigger(false)
 	
 	
 func turnOffColliders():
 	for child in get_children():
 		if (child.get_type() == "CollisionPolygon2D"):
 			child.set_trigger(true) #turns it off
+			
+func unSheath(direction):
+	show()
+	change_direction(direction)
 		

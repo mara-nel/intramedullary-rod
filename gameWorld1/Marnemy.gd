@@ -30,9 +30,16 @@ func _ready():
 	direction = DIRECTIONS[randi()%4]
 	directionChanged()
 
-func _on_Enemy_body_enter(body):
+#func _on_Enemy_body_enter(body):
+#	if(body.is_in_group("weapon")):
+#		print("hit by a weapon")
+		
 	
 func _fixed_process(delta):
+	if(is_colliding() and get_collider().is_in_group("weapon")):
+		self.queue_free()
+		print("gone")
+	
 	#follows a path
 	if(get_parent().get_type() == "PathFollow2D"):
 		get_parent().set_offset(get_parent().get_offset() + (walkSpeed*delta))
@@ -47,6 +54,7 @@ func _fixed_process(delta):
 			# turns around if it hits something
 			if(is_colliding()):
 				direction = getNewDirection()
+				print(get_collider().get_name())
 			elif(OS.get_unix_time()- timeOfLastDirectionChange > minDirectionChangeTime):
 				direction = getNewDirection()
 			velocity = direction*walkSpeed*delta
@@ -58,15 +66,15 @@ func _fixed_process(delta):
 				move(velocity)
 			else:
 				direction = getNewDirection()
-
+	
 	#hides if collides with a weapon
 #	if(is_colliding()):
 #		var hitting = get_collider()
 #		if(!hitting.get_name() == "TileMap"):
 #			print("  "+get_name() + " hit " + hitting.get_name())
 
-#	if(is_colliding() and get_collider().is_in_group("weapon")):
-#		hide()
+	
+		#hide()
 	
 # returns true if the moving in the current direction stays in the mesh
 func canMove():

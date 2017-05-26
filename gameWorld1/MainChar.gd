@@ -1,9 +1,14 @@
 extends KinematicBody2D
 
+var NORTH = Vector2(0,-1)
+var SOUTH = Vector2(0,1)
+var WEST = Vector2(-1,0)
+var EAST = Vector2(1,0)
+
 var velocity = Vector2()
 var walkSpeed = 125
 var runSpeed = 100
-var direction = Vector2()
+var direction = SOUTH
 
 # these are specifically defined for current sprite sheet
 # ie this is probably a bad way to do things/will be updated later
@@ -12,10 +17,7 @@ var LEFT = 1
 var UP = 3
 var RIGHT = 2
 
-var NORTH = Vector2(0,-1)
-var SOUTH = Vector2(0,1)
-var WEST = Vector2(-1,0)
-var EAST = Vector2(1,0)
+
 
 var directionDict = { NORTH: UP, SOUTH: DOWN, WEST:LEFT, EAST: RIGHT }
 
@@ -58,7 +60,7 @@ func _fixed_process(delta):
 	velocity = Vector2()
 	weapon.hide()
 	if(Input.is_action_pressed("ui_accept")):
-		weapon.show()
+		weapon.unSheath(directionDict[direction])
 	
 	var numbPresses = numberOfDirectionsPressed()
 	if(numbPresses > 1):
@@ -78,6 +80,14 @@ func _fixed_process(delta):
 		set_velocity()
 	var motion = velocity * delta
 	move(motion)
+	
+	if(weapon.is_colliding()):
+		print("weapon is colliding")
+	
+	
+#	for body in get_tree().get_nodes_in_group("enemy"):
+#		if(body in weapon.get_overlaping_bodies()):
+#			print("hammer in an enemy"+" mainchar scene")	
 	
 	#provides a slide feature for movement along a wall
 	if(is_colliding()):
