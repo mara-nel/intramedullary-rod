@@ -7,7 +7,7 @@
 
 [node name="MainChar" parent="." instance=ExtResource( 1 )]
 
-transform/pos = Vector2( 160, 184 )
+transform/pos = Vector2( 160, 183 )
 
 [node name="Area0x0" parent="." instance=ExtResource( 2 )]
 
