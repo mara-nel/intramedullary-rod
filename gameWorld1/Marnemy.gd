@@ -38,6 +38,8 @@ func _ready():
 		
 	
 func _fixed_process(delta):
+	# this should all get cleanup some
+	
 	if(is_colliding()):
 		print("enemy hit: "+get_collider().get_name())
 		var collWith = get_collider()
@@ -68,7 +70,6 @@ func _fixed_process(delta):
 			# turns around if it hits something
 			if(is_colliding()):
 				direction = getNewDirection()
-				print(get_collider().get_name())
 			elif(OS.get_unix_time()- timeOfLastDirectionChange > minDirectionChangeTime):
 				direction = getNewDirection()
 			velocity = direction*walkSpeed*delta
@@ -81,14 +82,6 @@ func _fixed_process(delta):
 			else:
 				direction = getNewDirection()
 	
-	#hides if collides with a weapon
-#	if(is_colliding()):
-#		var hitting = get_collider()
-#		if(!hitting.get_name() == "TileMap"):
-#			print("  "+get_name() + " hit " + hitting.get_name())
-
-	
-		#hide()
 	
 # returns true if the moving in the current direction stays in the mesh
 func canMove():

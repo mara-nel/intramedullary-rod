@@ -10,7 +10,7 @@ onready var enemies = get_tree().get_nodes_in_group("enemy")
 onready var hBar = get_node("HealthBar")
 onready var gameOverPanel = get_node("GameOverScreen")
 onready var fps_label = get_node("HealthBar/FPSLabel")
-
+onready var wilderness = get_node("Wilderness")
 
 func _ready():
 	var screen_size = OS.get_screen_size()
@@ -18,6 +18,7 @@ func _ready():
 	OS.set_window_position(screen_size*0.5 - window_size*0.5)
 	map_size.x -= 16 #width of healthbar
 	
+	wilderness.connect("didWarp", self, "update_camera")
 	
 	
 	update_camera()
@@ -78,3 +79,9 @@ func update_live_enemies():
 			#turn the enemey on
 			pass
 
+# did this to update the camera after a warp (otherwise it points to wrong spot)
+# but it seems that this would get triggered before scenemanager gets around to changing
+# the chars position
+func _on_Wilderness_didWarp():
+	#update_camera()
+	pass
