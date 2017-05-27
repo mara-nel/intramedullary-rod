@@ -6,7 +6,7 @@ var WEST = Vector2(-1,0)
 var EAST = Vector2(1,0)
 
 var velocity = Vector2()
-var walkSpeed = 125
+var walkSpeed = 100
 var runSpeed = 100
 var direction = SOUTH
 
@@ -20,18 +20,21 @@ var LEFT = 1
 var UP = 3
 var RIGHT = 2
 
-
-
 var directionDict = { NORTH: UP, SOUTH: DOWN, WEST:LEFT, EAST: RIGHT }
 
 #used to keep track of which direction was most recently pressed
 var lastPressed = SOUTH
 
-
 var sprite
 var weapon
 var healthBar
 var hitTimer
+
+var size
+
+signal move
+var is_moving = false
+
 
 func _ready():
 	# Called every time the node is added to the scene.
@@ -43,6 +46,7 @@ func _ready():
 	healthBar = get_parent().get_node("HealthBar")
 	hitTimer = get_node("RecentHitTimer")
 	health = maxHealth
+	size = sprite.get_texture().get_size() * sprite.get_scale()
 
 # for things that happen, not a constantly running thing?
 func _input(event):
@@ -71,29 +75,31 @@ func _input(event):
 
 # a more constantly running thing, for continuous operations
 func _fixed_process(delta):
+	is_moving = false
 	velocity = Vector2()
 	weapon.hide()
 	if(Input.is_action_pressed("ui_accept")):
 		weapon.unSheath(directionDict[direction])
 	
 	var numbPresses = numberOfDirectionsPressed()
-	if(numbPresses > 1):
-		set_direction(lastPressed)
-	else:
-		if(Input.is_action_pressed("ui_down")):
-			set_direction(SOUTH)
-		elif(Input.is_action_pressed("ui_up")):
-			set_direction(NORTH)
-		elif(Input.is_action_pressed("ui_left")):
-			set_direction(WEST)
-		elif(Input.is_action_pressed("ui_right")):
-			set_direction(EAST)
-	
-	#sets velocity only if some direction is currently pressed
-	if(numbPresses > 0):
+	if(numbPresses >0):
+		is_moving = true
+		if(numbPresses > 1):
+			set_direction(lastPressed)
+		else:
+			if(Input.is_action_pressed("ui_down")):
+				set_direction(SOUTH)
+			elif(Input.is_action_pressed("ui_up")):
+				set_direction(NORTH)
+			elif(Input.is_action_pressed("ui_left")):
+				set_direction(WEST)
+			elif(Input.is_action_pressed("ui_right")):
+				set_direction(EAST)
 		set_velocity()
 	var motion = velocity * delta
 	move(motion)
+	if(is_moving):
+		emit_signal("move")
 	
 	if(weapon.is_colliding()):
 		print("weapon is colliding")
