@@ -9,6 +9,8 @@ onready var enemies = get_tree().get_nodes_in_group("enemy")
 
 onready var hBar = get_node("HealthBar")
 onready var gameOverPanel = get_node("GameOverScreen")
+onready var fps_label = get_node("HealthBar/FPSLabel")
+
 
 func _ready():
 	var screen_size = OS.get_screen_size()
@@ -30,7 +32,8 @@ func _fixed_process(delta):
 		# highly doubt this is good practice
 		gameOverPanel.set_offset(Vector2())
 		get_tree().set_pause(true)
-
+	fps_label.clear()
+	fps_label.add_text(str(OS.get_frames_per_second()))
 
 
 func get_body_grid_pos( body):

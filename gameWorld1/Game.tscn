@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=1]
+[gd_scene load_steps=7 format=1]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
 [ext_resource path="res://MainChar.tscn" type="PackedScene" id=2]
 [ext_resource path="res://HealthBar.tscn" type="PackedScene" id=3]
-[ext_resource path="res://GameOverScreen.tscn" type="PackedScene" id=4]
-[ext_resource path="res://AreaScenes/Wilderness.tscn" type="PackedScene" id=5]
+[ext_resource path="res://mainFont.fnt" type="BitmapFont" id=4]
+[ext_resource path="res://GameOverScreen.tscn" type="PackedScene" id=5]
+[ext_resource path="res://AreaScenes/Wilderness.tscn" type="PackedScene" id=6]
 
 [node name="Game" type="Node" groups=[
 "Game",
@@ -18,11 +19,26 @@ transform/pos = Vector2( 160, 183 )
 
 [node name="HealthBar" parent="." instance=ExtResource( 3 )]
 
-[node name="GameOverScreen" parent="." instance=ExtResource( 4 )]
+[node name="FPSLabel" type="RichTextLabel" parent="HealthBar"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 40.0
+custom_fonts/normal_font = ExtResource( 4 )
+bbcode/enabled = false
+bbcode/bbcode = ""
+visible_characters = -1
+
+[node name="GameOverScreen" parent="." instance=ExtResource( 5 )]
 
 offset = Vector2( 0, 200 )
 
-[node name="Wilderness" parent="." instance=ExtResource( 5 )]
+[node name="Wilderness" parent="." instance=ExtResource( 6 )]
 
 [connection signal="move" from="MainChar" to="." method="update_camera"]
 
