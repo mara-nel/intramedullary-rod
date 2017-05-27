@@ -10,6 +10,8 @@ var walkSpeed = 125
 var runSpeed = 100
 var direction = SOUTH
 
+var health
+
 # these are specifically defined for current sprite sheet
 # ie this is probably a bad way to do things/will be updated later
 var DOWN = 0
@@ -21,17 +23,14 @@ var RIGHT = 2
 
 var directionDict = { NORTH: UP, SOUTH: DOWN, WEST:LEFT, EAST: RIGHT }
 
-# given compass direction, gives the vector of where the weapon should live
-# quite possible that this should be dependent on what the weapon is, maybe I
-# should have this live with each weapon
-#var weaponPosDict = { NORTH: 
-
 #used to keep track of which direction was most recently pressed
 var lastPressed = SOUTH
 
 
 var sprite
 var weapon
+var healthBar
+
 
 func _ready():
 	# Called every time the node is added to the scene.
@@ -40,7 +39,11 @@ func _ready():
 	set_process_input(true)
 	sprite = get_node("Sprite")
 	weapon = get_node("Hammer")
+	healthBar = get_parent().get_node("HealthBar")
+	
+	health = 100
 
+# for things that happen, not a constantly running thing?
 func _input(event):
 	if(event.is_action_pressed("ui_select") and not event.is_echo()):
 		print(str(get_pos()))
@@ -55,7 +58,9 @@ func _input(event):
 		lastPressed = EAST
 	elif(event.is_action_pressed("ui_up") and not event.is_echo()):
 		lastPressed = NORTH
-	
+
+
+# a more constantly running thing, for continuous operations
 func _fixed_process(delta):
 	velocity = Vector2()
 	weapon.hide()
@@ -85,15 +90,17 @@ func _fixed_process(delta):
 		print("weapon is colliding")
 	
 	
-#	for body in get_tree().get_nodes_in_group("enemy"):
-#		if(body in weapon.get_overlaping_bodies()):
-#			print("hammer in an enemy"+" mainchar scene")	
-	
 	#provides a slide feature for movement along a wall
 	if(is_colliding()):
 		# good for testing whats being collided with
 		print(get_collider().get_name())
 		print("collision at: "+str(get_pos()))
+		
+		if(get_collider().is_in_group("enemy")):
+			health -= 20
+			healthBar.set_health(health)
+			
+	
 		var n = get_collision_normal()
 		motion = n.slide(motion)
 		velocity = n.slide(velocity)
