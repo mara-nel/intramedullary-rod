@@ -6,7 +6,9 @@
 [ext_resource path="res://GameOverScreen.tscn" type="PackedScene" id=4]
 [ext_resource path="res://AreaScenes/Wilderness.tscn" type="PackedScene" id=5]
 
-[node name="Game" type="Node"]
+[node name="Game" type="Node" groups=[
+"Game",
+]]
 
 script/script = ExtResource( 1 )
 

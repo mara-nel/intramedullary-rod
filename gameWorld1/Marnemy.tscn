@@ -27,7 +27,7 @@ points = Vector2Array( 5.48756, 5.30496, 4.79815, -4.99552, 7.90046, -1.95404, 7
 "enemy",
 ]]
 
-transform/pos = Vector2( 8, 8 )
+transform/pos = Vector2( 7.97241, 8 )
 z/z = 1
 input/pickable = false
 shapes/0/shape = SubResource( 1 )

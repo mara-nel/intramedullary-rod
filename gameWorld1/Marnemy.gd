@@ -7,7 +7,7 @@ var velocity = Vector2()
 var direction = Vector2()
 var timeOfLastDirectionChange = 0
 var minDirectionChangeTime = 3
-
+var isDead = false
 
 # set true if a navigation2d exists and you want to move around in it
 export (bool) var mobile = true
@@ -19,6 +19,8 @@ var WEST = Vector2(-1,0)
 var EAST = Vector2(1,0)
 var DIRECTIONS = [ NORTH, SOUTH, WEST, EAST ]
 
+
+signal dead
 
 
 func _ready():
@@ -37,10 +39,13 @@ func _ready():
 	
 func _fixed_process(delta):
 	if(is_colliding()):
+		print("enemy hit: "+get_collider().get_name())
 		var collWith = get_collider()
 		if(collWith.is_in_group("weapon")):
-			self.queue_free()
-			print("gone")
+			isDead = true
+			emit_signal("dead")
+			#self.queue_free()
+			
 		elif(collWith.is_in_group("player")):
 			collWith.gotHitByEnemy()
 	
@@ -53,7 +58,12 @@ func _fixed_process(delta):
 		if(nav == null):
 			#get the navigation2d which will be a child off of the root
 			# better hope the guy is a child of a child of whatever has the nav
-			nav = get_parent().get_parent().get_node("Navigation2D")
+			#nav = get_parent().get_parent().get_node("Navigation2D")
+			
+			# if using the individual tile method, NEED TO UNCOMMENT THE ABOVE AND COMMENT OUT THE BELOW
+			# right now this always returns the first Nav tagged with enemyNav
+			nav = get_tree().get_nodes_in_group("enemyNav")[0]
+			
 		if(nav != null): # fails when no such navigation2d node is found
 			# turns around if it hits something
 			if(is_colliding()):

@@ -53,8 +53,9 @@ func _input(event):
 	#######
 	### useful things for testing
 	if(event.is_action_pressed("ui_select") and not event.is_echo()):
-		print(str(get_pos()))
-		print(str(hitTimer.get_time_left()))
+		pass
+		#print(str(get_pos()))
+		#print(str(hitTimer.get_time_left()))
 	if(event.is_action("left_click")):
 		set_pos(get_viewport().get_mouse_pos())
 	if(event.is_action_pressed("ui_focus_next")):
@@ -108,8 +109,8 @@ func _fixed_process(delta):
 	#provides a slide feature for movement along a wall
 	if(is_colliding()):
 		# good for testing whats being collided with
-		print(get_collider().get_name())
-		print("collision at: "+str(get_pos()))
+		print("char hit: "+get_collider().get_name())
+		#print("collision at: "+str(get_pos()))
 		
 		if(get_collider().is_in_group("enemy")):
 			gotHitByEnemy()
