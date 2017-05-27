@@ -1,4 +1,7 @@
-[gd_scene format=1]
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://liber64.fnt" type="BitmapFont" id=1]
+[ext_resource path="res://mainFont.fnt" type="BitmapFont" id=2]
 
 [node name="GameOverScreen" type="CanvasLayer"]
 
@@ -13,9 +16,9 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 96.0
+margin/left = 72.0
 margin/top = 32.0
-margin/right = 256.0
+margin/right = 264.0
 margin/bottom = 80.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
@@ -24,10 +27,12 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 32.0
-margin/top = 16.0
-margin/right = 192.0
-margin/bottom = 64.0
+margin/left = 11.0
+margin/top = 12.0
+margin/right = 186.0
+margin/bottom = 52.0
+custom_fonts/mono_font = ExtResource( 1 )
+custom_fonts/normal_font = ExtResource( 2 )
 bbcode/enabled = false
 bbcode/bbcode = "GAME OVER"
 visible_characters = -1
