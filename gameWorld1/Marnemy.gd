@@ -17,21 +17,33 @@ var NORTH = Vector2(0,-1)
 var SOUTH = Vector2(0,1)
 var WEST = Vector2(-1,0)
 var EAST = Vector2(1,0)
-var DIRECTIONS = Array() 
+var DIRECTIONS = [ NORTH, SOUTH, WEST, EAST ]
 
 
 
 func _ready():
 	set_fixed_process(true)
-	DIRECTIONS.append(NORTH)
-	DIRECTIONS.append(SOUTH)
-	DIRECTIONS.append(WEST)
-	DIRECTIONS.append(EAST)
+#	DIRECTIONS.append(NORTH)
+#	DIRECTIONS.append(SOUTH)
+#	DIRECTIONS.append(WEST)
+#	DIRECTIONS.append(EAST)
 	direction = DIRECTIONS[randi()%4]
 	directionChanged()
 
+#func _on_Enemy_body_enter(body):
+#	if(body.is_in_group("weapon")):
+#		print("hit by a weapon")
+		
 	
 func _fixed_process(delta):
+	if(is_colliding()):
+		var collWith = get_collider()
+		if(collWith.is_in_group("weapon")):
+			self.queue_free()
+			print("gone")
+		elif(collWith.is_in_group("player")):
+			collWith.gotHitByEnemy()
+	
 	#follows a path
 	if(get_parent().get_type() == "PathFollow2D"):
 		get_parent().set_offset(get_parent().get_offset() + (walkSpeed*delta))
@@ -46,9 +58,9 @@ func _fixed_process(delta):
 			# turns around if it hits something
 			if(is_colliding()):
 				direction = getNewDirection()
+				print(get_collider().get_name())
 			elif(OS.get_unix_time()- timeOfLastDirectionChange > minDirectionChangeTime):
 				direction = getNewDirection()
-				print("timeout")
 			velocity = direction*walkSpeed*delta
 			
 #			if(Input.is_action_pressed("ui_accept")):
@@ -58,8 +70,16 @@ func _fixed_process(delta):
 				move(velocity)
 			else:
 				direction = getNewDirection()
+	
+	#hides if collides with a weapon
+#	if(is_colliding()):
+#		var hitting = get_collider()
+#		if(!hitting.get_name() == "TileMap"):
+#			print("  "+get_name() + " hit " + hitting.get_name())
 
-
+	
+		#hide()
+	
 # returns true if the moving in the current direction stays in the mesh
 func canMove():
 	var attemptedMove = get_pos()+velocity

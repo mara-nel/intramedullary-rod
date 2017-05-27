@@ -17,7 +17,7 @@ _data = {
 
 bake_interval = 5.0
 _data = {
-"points": Vector2Array( 0, 0, 0, 0, 136, 8, 0, 0, 0, 0, 136, 56, 0, 0, 0, 0, 216, 56, 0, 0, 0, 0, 216, 8, 0, 0, 0, 0, 136, 8 )
+"points": Vector2Array( 0, 0, 0, 0, 136, 24, 0, 0, 0, 0, 136, 56, 0, 0, 0, 0, 216, 56, 0, 0, 0, 0, 216, 24, 0, 0, 0, 0, 232, 24, 0, 0, 0, 0, 232, 56, 0, 0, 0, 0, 120, 56, 0, 0, 0, 0, 120, 24, 0, 0, 0, 0, 128, 24, 0, 0, 0, 0, 136, 24 )
 }
 
 [sub_resource type="Curve2D" id=3]
@@ -67,6 +67,8 @@ target_level = "res://AreaScenes/Area2x0.tscn"
 
 [node name="Node" type="Node" parent="."]
 
+editor/display_folded = true
+
 [node name="LeftSquare" type="Path2D" parent="Node"]
 
 curve = SubResource( 1 )
@@ -92,7 +94,7 @@ curve = SubResource( 2 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Node/UpSquare"]
 
-transform/pos = Vector2( 214.834, 9.63377 )
+transform/pos = Vector2( 232, 40.6963 )
 offset = 171.91
 h_offset = 0.0
 v_offset = 0.0
