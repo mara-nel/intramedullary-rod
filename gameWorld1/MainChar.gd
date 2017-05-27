@@ -11,6 +11,7 @@ var runSpeed = 100
 var direction = SOUTH
 
 var health
+var maxHealth = 100
 
 # these are specifically defined for current sprite sheet
 # ie this is probably a bad way to do things/will be updated later
@@ -30,7 +31,7 @@ var lastPressed = SOUTH
 var sprite
 var weapon
 var healthBar
-
+var hitTimer
 
 func _ready():
 	# Called every time the node is added to the scene.
@@ -40,15 +41,23 @@ func _ready():
 	sprite = get_node("Sprite")
 	weapon = get_node("Hammer")
 	healthBar = get_parent().get_node("HealthBar")
-	
-	health = 100
+	hitTimer = get_node("RecentHitTimer")
+	health = maxHealth
 
 # for things that happen, not a constantly running thing?
 func _input(event):
+	#######
+	### useful things for testing
 	if(event.is_action_pressed("ui_select") and not event.is_echo()):
 		print(str(get_pos()))
+		print(str(hitTimer.get_time_left()))
 	if(event.is_action("left_click")):
 		set_pos(get_viewport().get_mouse_pos())
+	if(event.is_action_pressed("ui_focus_next")):
+		addHealth(20)
+		healthBar.set_health(health)
+	#######
+	
 	
 	if(event.is_action_pressed("ui_down") and not event.is_echo()):
 		lastPressed = SOUTH
@@ -97,9 +106,7 @@ func _fixed_process(delta):
 		print("collision at: "+str(get_pos()))
 		
 		if(get_collider().is_in_group("enemy")):
-			health -= 20
-			healthBar.set_health(health)
-			
+			gotHitByEnemy()
 	
 		var n = get_collision_normal()
 		motion = n.slide(motion)
@@ -124,3 +131,16 @@ func numberOfDirectionsPressed():
 		if(Input.is_action_pressed(dir)):
 			num +=1
 	return num
+
+
+func gotHitByEnemy():
+	if(hitTimer.get_time_left()==0):
+		health -= 20
+		healthBar.set_health(health)
+		hitTimer.start()
+		
+func addHealth( amount):
+	if(health + amount <= maxHealth):
+			health += amount
+	else:
+		health == maxHealth

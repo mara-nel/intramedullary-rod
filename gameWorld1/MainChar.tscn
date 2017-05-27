@@ -41,4 +41,11 @@ trigger = false
 
 transform/pos = Vector2( 0.0460701, 11.7017 )
 
+[node name="RecentHitTimer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 0.8
+one_shot = true
+autostart = false
+
 

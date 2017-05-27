@@ -36,9 +36,13 @@ func _ready():
 		
 	
 func _fixed_process(delta):
-	if(is_colliding() and get_collider().is_in_group("weapon")):
-		self.queue_free()
-		print("gone")
+	if(is_colliding()):
+		var collWith = get_collider()
+		if(collWith.is_in_group("weapon")):
+			self.queue_free()
+			print("gone")
+		elif(collWith.is_in_group("player")):
+			collWith.gotHitByEnemy()
 	
 	#follows a path
 	if(get_parent().get_type() == "PathFollow2D"):

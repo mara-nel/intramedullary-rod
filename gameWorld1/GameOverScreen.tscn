@@ -1,0 +1,35 @@
+[gd_scene format=1]
+
+[node name="GameOverScreen" type="CanvasLayer"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="Panel" type="Panel" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 96.0
+margin/top = 32.0
+margin/right = 256.0
+margin/bottom = 80.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 32.0
+margin/top = 16.0
+margin/right = 192.0
+margin/bottom = 64.0
+bbcode/enabled = false
+bbcode/bbcode = "GAME OVER"
+visible_characters = -1
+
+

@@ -11,8 +11,9 @@ func _ready():
 	pBar.set_percent_visible(false)
 	
 func _input(event):
-	if(event.is_action_pressed("ui_focus_next")):
-		health -= 10
+#	if(event.is_action_pressed("ui_focus_next")):
+#		health += 20
+	pass
 	
 func _fixed_process(delta):
 	pBar.set_value(health)
