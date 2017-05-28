@@ -92,6 +92,8 @@ enabled = true
 
 [node name="paths" type="Node" parent="."]
 
+editor/display_folded = true
+
 [node name="cavePath" type="Path2D" parent="paths"]
 
 transform/pos = Vector2( 136, -8 )

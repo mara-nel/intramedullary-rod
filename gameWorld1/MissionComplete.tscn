@@ -1,0 +1,49 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://MissionComplete.gd" type="Script" id=1]
+[ext_resource path="res://mainFont.fnt" type="BitmapFont" id=2]
+
+[node name="MissionComplete" type="CanvasLayer"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+script/script = ExtResource( 1 )
+
+[node name="Panel" type="Panel" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 8.0
+margin/top = 32.0
+margin/right = 328.0
+margin/bottom = 80.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 8.0
+margin/top = 11.0
+margin/right = 336.0
+margin/bottom = 67.0
+custom_fonts/normal_font = ExtResource( 2 )
+bbcode/enabled = false
+bbcode/bbcode = "Mission Complete"
+visible_characters = -1
+
+[node name="Timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 5.0
+one_shot = true
+autostart = false
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+
+

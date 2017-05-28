@@ -11,7 +11,7 @@ var LEFT = 1
 var UP = 3
 var RIGHT = 2
 
-var sprite
+onready var sprite = get_node("Sprite")
 
 var directionFacing = DOWN
 
@@ -19,14 +19,14 @@ var directionColliderDict = { UP:"UpCollision", DOWN: "DownCollision", LEFT: "Le
 
 
 func _ready():
-	sprite = get_node("Sprite")
+	turnOffColliders()
 	set_fixed_process(true)
 
 func _fixed_process(delta):
 	if(is_hidden()):
 		turnOffColliders()
 	if(is_colliding()):
-		print("-hammer has hit: " + get_collider().get_name())
+		print("hammer has hit: " + get_collider().get_name())
 
 #sets the sprite frame to face correct direction and turns on corresponding collider
 func change_direction(direction):

@@ -7,8 +7,8 @@ var velocity = Vector2()
 var direction = Vector2()
 var timeOfLastDirectionChange = 0
 var minDirectionChangeTime = 3
-
-
+var isDead = false
+var failedMoveAttempts = 0
 # set true if a navigation2d exists and you want to move around in it
 export (bool) var mobile = true
 
@@ -20,27 +20,24 @@ var EAST = Vector2(1,0)
 var DIRECTIONS = [ NORTH, SOUTH, WEST, EAST ]
 
 
+signal dead
+
 
 func _ready():
 	set_fixed_process(true)
-#	DIRECTIONS.append(NORTH)
-#	DIRECTIONS.append(SOUTH)
-#	DIRECTIONS.append(WEST)
-#	DIRECTIONS.append(EAST)
 	direction = DIRECTIONS[randi()%4]
 	directionChanged()
 
-#func _on_Enemy_body_enter(body):
-#	if(body.is_in_group("weapon")):
-#		print("hit by a weapon")
-		
 	
 func _fixed_process(delta):
+	# this should all get cleanup some
+	
 	if(is_colliding()):
+		#print("enemy hit: "+get_collider().get_name())
 		var collWith = get_collider()
 		if(collWith.is_in_group("weapon")):
-			self.queue_free()
-			print("gone")
+			died()
+			
 		elif(collWith.is_in_group("player")):
 			collWith.gotHitByEnemy()
 	
@@ -53,32 +50,32 @@ func _fixed_process(delta):
 		if(nav == null):
 			#get the navigation2d which will be a child off of the root
 			# better hope the guy is a child of a child of whatever has the nav
-			nav = get_parent().get_parent().get_node("Navigation2D")
+			#nav = get_parent().get_parent().get_node("Navigation2D")
+			
+			# if using the individual tile method, NEED TO UNCOMMENT THE ABOVE AND COMMENT OUT THE BELOW
+			# right now this always returns the first Nav tagged with enemyNav
+			nav = get_tree().get_nodes_in_group("enemyNav")[0]
+			
 		if(nav != null): # fails when no such navigation2d node is found
 			# turns around if it hits something
 			if(is_colliding()):
 				direction = getNewDirection()
-				print(get_collider().get_name())
 			elif(OS.get_unix_time()- timeOfLastDirectionChange > minDirectionChangeTime):
 				direction = getNewDirection()
 			velocity = direction*walkSpeed*delta
-			
-#			if(Input.is_action_pressed("ui_accept")):
-#				print(str(velocity.x)+ " " + str(velocity.y))
-			
+						
 			if(canMove()):
 				move(velocity)
+				failedMoveAttempts = 0
 			else:
+				failedMoveAttempts += 1
+				# a bad assumption, but if it cant move in any direction, then it was forced
+				# there, presumably by something that would have killed it (issue with hammer 
+				# doesnt report collision)
+				if(failedMoveAttempts >8 ):
+					died()
 				direction = getNewDirection()
 	
-	#hides if collides with a weapon
-#	if(is_colliding()):
-#		var hitting = get_collider()
-#		if(!hitting.get_name() == "TileMap"):
-#			print("  "+get_name() + " hit " + hitting.get_name())
-
-	
-		#hide()
 	
 # returns true if the moving in the current direction stays in the mesh
 func canMove():
@@ -107,3 +104,9 @@ func randomGamePoint():
 	var xCoord = randi()%320
 	var yCoord = randi()%192
 	return Vector2(xCoord, yCoord)
+
+# does the things that happen at death
+func died():
+	isDead = true
+	emit_signal("dead")
+	
