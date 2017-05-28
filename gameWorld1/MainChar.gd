@@ -8,7 +8,7 @@ var EAST = Vector2(1,0)
 var velocity = Vector2()
 var walkSpeed = 100
 var runSpeed = 100
-var direction = SOUTH
+var direction
 
 var health
 var maxHealth = 100
@@ -21,7 +21,7 @@ var UP = 3
 var RIGHT = 2
 
 var directionDict = { NORTH: UP, SOUTH: DOWN, WEST:LEFT, EAST: RIGHT }
-
+var directionAsString = { NORTH: "North", SOUTH: "South", EAST:"East", WEST:"West"} 
 #used to keep track of which direction was most recently pressed
 var lastPressed = SOUTH
 
@@ -29,7 +29,7 @@ onready var sprite = get_node("Sprite")
 onready var weapon = get_node("Hammer")
 onready var healthBar = get_parent().get_node("HealthBar")
 onready var hitTimer = get_node("RecentHitTimer")
-
+onready var animator = get_node("AnimationPlayer")
 
 signal move
 var is_moving = false
@@ -42,6 +42,7 @@ func _ready():
 	set_process_input(true)
 	
 	health = maxHealth
+	set_direction(SOUTH)
 
 # for things that happen, not a constantly running thing?
 func _input(event):
@@ -76,6 +77,10 @@ func _fixed_process(delta):
 	weapon.hide()
 	if(Input.is_action_pressed("ui_accept")):
 		weapon.unSheath(directionDict[direction])
+		if(direction ==NORTH):
+			weapon.set_draw_behind_parent(true)
+		else:
+			weapon.set_draw_behind_parent(false)
 	
 	var numbPresses = numberOfDirectionsPressed()
 	if(numbPresses >0):
@@ -96,6 +101,11 @@ func _fixed_process(delta):
 	move(motion)
 	if(is_moving):
 		emit_signal("move")
+	else:
+		if(!animator.is_playing()):
+			
+			#animator.play("SouthRest")
+			pass
 	
 	if(weapon.is_colliding()):
 		print("weapon is colliding")
@@ -120,10 +130,12 @@ func _fixed_process(delta):
 		
 
 func set_direction(dir):
-	direction = dir
-	sprite.set_frame(directionDict[direction])
-	weapon.change_direction(directionDict[direction])
-	weapon.set_pos(10*direction)
+	if(direction != dir):
+		direction = dir
+		sprite.set_frame(directionDict[direction])
+		animator.play(directionAsString[direction]+"Rest")
+		weapon.change_direction(directionDict[direction])
+		weapon.set_pos(10*direction)
 	
 func set_velocity():
 	velocity = direction * walkSpeed

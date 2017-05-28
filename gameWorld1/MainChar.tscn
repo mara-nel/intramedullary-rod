@@ -1,22 +1,89 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=9 format=1]
 
 [ext_resource path="res://MainChar.gd" type="Script" id=1]
-[ext_resource path="res://charRevisedSides.tex" type="Texture" id=2]
+[ext_resource path="res://charWRest.tex" type="Texture" id=2]
 [ext_resource path="res://Hammer.tscn" type="PackedScene" id=3]
 
-[sub_resource type="ConvexPolygonShape2D" id=1]
+[sub_resource type="ConvexPolygonShape2D" id=5]
 
 custom_solver_bias = 0.0
 points = Vector2Array( -4.29235, 0.784249, -3.98893, -0.981106, 4.03792, -1.00869, 3.95517, 6.57682, 3.59658, 7.65259, 0.97613, 8.03876, -1.09265, 8.03876, -3.46484, 7.73534, -4.01652, 6.4389 )
+
+[sub_resource type="Animation" id=9]
+
+resource/name = "EastRest"
+length = 1.6
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.8 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ 6, 7 ]
+}
+
+[sub_resource type="Animation" id=7]
+
+resource/name = "NorthRest"
+length = 1.6
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.8 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ 4, 5 ]
+}
+
+[sub_resource type="Animation" id=8]
+
+resource/name = "SouthRest"
+length = 1.6
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.8 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ 0, 1 ]
+}
+
+[sub_resource type="Animation" id=6]
+
+resource/name = "WestRest"
+length = 1.6
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.8 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ 2, 3 ]
+}
 
 [node name="MainChar" type="KinematicBody2D" groups=[
 "player",
 ]]
 
-transform/pos = Vector2( 8, 8 )
 z/z = 2
 input/pickable = false
-shapes/0/shape = SubResource( 1 )
+shapes/0/shape = SubResource( 5 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 1
@@ -28,7 +95,7 @@ script/script = ExtResource( 1 )
 
 texture = ExtResource( 2 )
 vframes = 2
-hframes = 2
+hframes = 4
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 
@@ -36,9 +103,13 @@ build_mode = 0
 polygon = Vector2Array( -4.29235, 0.784249, -3.98893, -0.981106, 4.03792, -1.00869, 3.95517, 6.57682, 3.59658, 7.65259, 0.97613, 8.03876, -1.09265, 8.03876, -3.46484, 7.73534, -4.01652, 6.4389 )
 shape_range = Vector2( 0, 0 )
 trigger = false
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Hammer" parent="." instance=ExtResource( 3 )]
 
+visibility/visible = false
 transform/pos = Vector2( 0.0460701, 11.7017 )
 
 [node name="RecentHitTimer" type="Timer" parent="."]
@@ -47,5 +118,19 @@ process_mode = 1
 wait_time = 0.8
 one_shot = true
 autostart = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+playback/process_mode = 1
+playback/default_blend_time = 0.0
+root/root = NodePath("..")
+anims/EastRest = SubResource( 9 )
+anims/NorthRest = SubResource( 7 )
+anims/SouthRest = SubResource( 8 )
+anims/WestRest = SubResource( 6 )
+playback/active = true
+playback/speed = 1.0
+blend_times = [  ]
+autoplay = ""
 
 
