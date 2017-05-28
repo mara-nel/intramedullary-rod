@@ -25,12 +25,11 @@ var directionDict = { NORTH: UP, SOUTH: DOWN, WEST:LEFT, EAST: RIGHT }
 #used to keep track of which direction was most recently pressed
 var lastPressed = SOUTH
 
-var sprite
-var weapon
-var healthBar
-var hitTimer
+onready var sprite = get_node("Sprite")
+onready var weapon = get_node("Hammer")
+onready var healthBar = get_parent().get_node("HealthBar")
+onready var hitTimer = get_node("RecentHitTimer")
 
-var size
 
 signal move
 var is_moving = false
@@ -41,12 +40,8 @@ func _ready():
 	# Initialization here
 	set_fixed_process(true)
 	set_process_input(true)
-	sprite = get_node("Sprite")
-	weapon = get_node("Hammer")
-	healthBar = get_parent().get_node("HealthBar")
-	hitTimer = get_node("RecentHitTimer")
+	
 	health = maxHealth
-	size = sprite.get_texture().get_size() * sprite.get_scale()
 
 # for things that happen, not a constantly running thing?
 func _input(event):
@@ -106,19 +101,20 @@ func _fixed_process(delta):
 		print("weapon is colliding")
 	
 	
-	#provides a slide feature for movement along a wall
 	if(is_colliding()):
 		# good for testing whats being collided with
-		print("char hit: "+get_collider().get_name())
+		#print("char hit: "+get_collider().get_name())
 		#print("collision at: "+str(get_pos()))
 		
 		if(get_collider().is_in_group("enemy")):
 			gotHitByEnemy()
 	
+		#provides a slide feature for movement along a wall
 		var n = get_collision_normal()
 		motion = n.slide(motion)
 		velocity = n.slide(velocity)
 		move(motion)
+		
 	if(weapon.is_colliding()):
 		print("*hammer has hit: " + get_collider().get_name())
 		
