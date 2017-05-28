@@ -9,6 +9,7 @@ onready var enemies = get_tree().get_nodes_in_group("enemy")
 
 onready var hBar = get_node("HealthBar")
 onready var gameOverPanel = get_node("GameOverScreen")
+onready var missionComplete = get_node("MissionComplete")
 onready var fps_label = get_node("HealthBar/FPSLabel")
 onready var wilderness = get_node("Wilderness")
 
@@ -19,7 +20,7 @@ func _ready():
 	map_size.x -= 16 #width of healthbar
 	
 	wilderness.connect("didWarp", self, "update_camera")
-	
+	wilderness.connect("allEnemiesDead", self, "show_mission_complete")
 	
 	update_camera()
 	
@@ -85,3 +86,8 @@ func update_live_enemies():
 func _on_Wilderness_didWarp():
 	#update_camera()
 	pass
+
+
+func show_mission_complete():
+	missionComplete.set_offset(Vector2())
+	missionComplete.start_timer()

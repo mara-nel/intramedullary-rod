@@ -59,7 +59,7 @@ func _input(event):
 	if(event.is_action("left_click")):
 		set_pos(get_viewport().get_mouse_pos())
 	if(event.is_action_pressed("ui_focus_next")):
-		addHealth(20)
+		addHealth(-20)
 		healthBar.set_health(health)
 	#######
 	

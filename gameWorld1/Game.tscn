@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=1]
+[gd_scene load_steps=8 format=1]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
 [ext_resource path="res://MainChar.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://mainFont.fnt" type="BitmapFont" id=4]
 [ext_resource path="res://GameOverScreen.tscn" type="PackedScene" id=5]
 [ext_resource path="res://AreaScenes/Wilderness.tscn" type="PackedScene" id=6]
+[ext_resource path="res://MissionComplete.tscn" type="PackedScene" id=7]
 
 [node name="Game" type="Node" groups=[
 "Game",
@@ -39,6 +40,10 @@ visible_characters = -1
 offset = Vector2( 0, 200 )
 
 [node name="Wilderness" parent="." instance=ExtResource( 6 )]
+
+[node name="MissionComplete" parent="." instance=ExtResource( 7 )]
+
+offset = Vector2( 0, 250 )
 
 [connection signal="move" from="MainChar" to="." method="update_camera"]
 
