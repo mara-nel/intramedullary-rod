@@ -110,7 +110,6 @@ __meta__ = {
 [node name="Hammer" parent="." instance=ExtResource( 3 )]
 
 visibility/visible = false
-transform/pos = Vector2( 0.0460701, 11.7017 )
 
 [node name="RecentHitTimer" type="Timer" parent="."]
 
@@ -132,5 +131,14 @@ playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
 autoplay = ""
+
+[node name="SwingEffect" type="Tween" parent="."]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[connection signal="tween_complete" from="SwingEffect" to="." method="_on_SwingEffect_tween_complete"]
 
 

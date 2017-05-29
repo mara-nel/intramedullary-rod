@@ -15,10 +15,10 @@ var maxHealth = 100
 
 # these are specifically defined for current sprite sheet
 # ie this is probably a bad way to do things/will be updated later
-var DOWN = 0
-var LEFT = 1
-var UP = 3
-var RIGHT = 2
+var DOWN = 3 #0
+var LEFT = 2 #1
+var UP = 0 #3
+var RIGHT = 1 #2
 
 var directionDict = { NORTH: UP, SOUTH: DOWN, WEST:LEFT, EAST: RIGHT }
 var directionAsString = { NORTH: "North", SOUTH: "South", EAST:"East", WEST:"West"} 
@@ -30,6 +30,7 @@ onready var weapon = get_node("Hammer")
 onready var healthBar = get_parent().get_node("HealthBar")
 onready var hitTimer = get_node("RecentHitTimer")
 onready var animator = get_node("AnimationPlayer")
+onready var sEffect = get_node("SwingEffect")
 
 signal move
 var is_moving = false
@@ -43,22 +44,30 @@ func _ready():
 	
 	health = maxHealth
 	set_direction(SOUTH)
+	
 
 # for things that happen, not a constantly running thing?
 func _input(event):
 	#######
 	### useful things for testing
 	if(event.is_action_pressed("ui_select") and not event.is_echo()):
-		pass
 		#print(str(get_pos()))
 		#print(str(hitTimer.get_time_left()))
-	if(event.is_action("left_click")):
-		set_pos(get_viewport().get_mouse_pos())
+		
+		weapon.unSheath(directionDict[direction])
+		if(direction ==NORTH):
+			weapon.set_draw_behind_parent(true)
+		else:
+			weapon.set_draw_behind_parent(false)
+		weapon.isCharged = true
+		
 	if(event.is_action_pressed("ui_focus_next")):
 		addHealth(-20)
 		healthBar.set_health(health)
 	#######
-	
+	if(event.is_action_released("ui_accept")):
+		swingHammer()
+
 	
 	if(event.is_action_pressed("ui_down") and not event.is_echo()):
 		lastPressed = SOUTH
@@ -74,14 +83,13 @@ func _input(event):
 func _fixed_process(delta):
 	is_moving = false
 	velocity = Vector2()
-	weapon.hide()
 	if(Input.is_action_pressed("ui_accept")):
-		weapon.unSheath(directionDict[direction])
+		#weapon.unSheath(directionDict[direction])
 		if(direction ==NORTH):
 			weapon.set_draw_behind_parent(true)
 		else:
 			weapon.set_draw_behind_parent(false)
-	
+		
 	var numbPresses = numberOfDirectionsPressed()
 	if(numbPresses >0):
 		is_moving = true
@@ -107,10 +115,6 @@ func _fixed_process(delta):
 			#animator.play("SouthRest")
 			pass
 	
-	if(weapon.is_colliding()):
-		print("weapon is colliding")
-	
-	
 	if(is_colliding()):
 		# good for testing whats being collided with
 		#print("char hit: "+get_collider().get_name())
@@ -135,7 +139,8 @@ func set_direction(dir):
 		sprite.set_frame(directionDict[direction])
 		animator.play(directionAsString[direction]+"Rest")
 		weapon.change_direction(directionDict[direction])
-		weapon.set_pos(10*direction)
+		#if(!weapon.isCharged and !weapon.is_hidden()):
+		#	weapon.set_pos(10*direction)
 	
 func set_velocity():
 	velocity = direction * walkSpeed
@@ -159,3 +164,20 @@ func addHealth( amount):
 			health += amount
 	else:
 		health == maxHealth
+
+func swingHammer():
+	weapon.isCharged = false
+	var rotation  = 180
+	if(direction == EAST):
+		rotation = -180
+	sEffect.interpolate_property(weapon, "transform/rot", 0 , rotation , .3 , 
+			Tween.TRANS_BOUNCE, Tween.EASE_OUT)
+	sEffect.interpolate_property(weapon, "transform/pos", Vector2(), direction*10, .3,
+			Tween.TRANS_EXPO, Tween.EASE_OUT)	
+	sEffect.start()
+
+func _on_SwingEffect_tween_complete( object, key ):
+	sEffect.reset(object,"transform/rot")
+	sEffect.reset(object,"transform/pos")
+	weapon.sheath()
+	sEffect.stop_all()

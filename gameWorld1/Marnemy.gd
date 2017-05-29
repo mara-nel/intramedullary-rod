@@ -68,6 +68,7 @@ func _fixed_process(delta):
 						
 				if(canMove()):
 					move(velocity)
+					#set_pos(get_pos()+velocity)
 					failedMoveAttempts = 0
 				else:
 					failedMoveAttempts += 1
