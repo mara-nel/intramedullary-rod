@@ -6,20 +6,21 @@ var downColliderLive
 var leftColliderLive
 var rightColliderLive
 
-var DOWN = 0
-var LEFT = 1
-var UP = 3
-var RIGHT = 2
+var DOWN = 3
+var LEFT = 2
+var UP = 0
+var RIGHT = 1
 
 onready var sprite = get_node("Sprite")
-
+onready var colliders = get_tree().get_nodes_in_group("collider")
 var directionFacing = DOWN
 
 var directionColliderDict = { UP:"UpCollision", DOWN: "DownCollision", LEFT: "LeftCollision", RIGHT:"RightCollision"}
-
+var isCharged = false
+var isSheathed = true
 
 func _ready():
-	turnOffColliders()
+	sheath()
 	set_fixed_process(true)
 
 func _fixed_process(delta):
@@ -35,13 +36,19 @@ func change_direction(direction):
 	if direction in directionColliderDict:
 		get_node(directionColliderDict[direction]).set_trigger(false)
 	
-	
+
 func turnOffColliders():
-	for child in get_children():
-		if (child.get_type() == "CollisionPolygon2D"):
-			child.set_trigger(true) #turns it off
-			
+	for coll in colliders:
+		coll.set_trigger(true)
+
+func sheath():
+	isSheathed = true
+	hide()
+
+	
+
 func unSheath(direction):
+	isSheathed = false
 	show()
 	change_direction(direction)
 		
