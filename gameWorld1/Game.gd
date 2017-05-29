@@ -13,6 +13,9 @@ onready var missionComplete = get_node("MissionComplete")
 onready var fps_label = get_node("HealthBar/FPSLabel")
 onready var wilderness = get_node("Wilderness")
 
+onready var camera = get_node("Camera2D")
+onready var camTween = get_node("CameraScroll")
+
 func _ready():
 	var screen_size = OS.get_screen_size()
 	#var window_size = OS.get_window_size()
@@ -62,10 +65,23 @@ func update_camera():
 	
 	if(new_player_grid_pos != player_world_pos):
 		player_world_pos = new_player_grid_pos
-		transform = get_viewport().get_canvas_transform()
-		transform[2] = -player_world_pos * map_size
-		get_viewport().set_canvas_transform(transform)
+#		transform = get_viewport().get_canvas_transform()
+#		transform[2] = -player_world_pos * map_size
+#		get_viewport().set_canvas_transform(transform)
+		
+		#camera.set_pos(newPos)
+		scrollCamera()
 		#update_live_enemies()
+
+func scrollCamera():
+	get_tree().set_pause(true)
+	camTween.interpolate_property(camera, "transform/pos",
+		camera.get_pos(), player_world_pos*map_size, .5, Tween.TRANS_EXPO, 
+		Tween.EASE_IN_OUT)
+	camTween.start()
+
+func _on_CameraScroll_tween_complete( object, key ):
+	get_tree().set_pause(false)
 
 # by just using one big map, I'll have a lot of enemies wandering around
 # im afraid that that could be bad for optimizing, if thats the case
@@ -91,3 +107,5 @@ func _on_Wilderness_didWarp():
 func show_mission_complete():
 	missionComplete.set_offset(Vector2())
 	missionComplete.start_timer()
+
+

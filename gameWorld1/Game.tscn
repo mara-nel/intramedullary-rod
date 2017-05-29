@@ -14,6 +14,27 @@
 
 script/script = ExtResource( 1 )
 
+[node name="Camera2D" type="Camera2D" parent="."]
+
+process/pause_mode = 2
+transform/scale = Vector2( 5.25, 3 )
+anchor_mode = 0
+rotating = false
+current = true
+zoom = Vector2( 1, 1 )
+limit/left = -10000000
+limit/top = -10000000
+limit/right = 10000000
+limit/bottom = 10000000
+drag_margin/h_enabled = true
+drag_margin/v_enabled = true
+smoothing/enable = false
+smoothing/speed = 5.0
+drag_margin/left = 0.2
+drag_margin/top = 0.2
+drag_margin/right = 0.2
+drag_margin/bottom = 0.2
+
 [node name="MainChar" parent="." instance=ExtResource( 2 )]
 
 transform/pos = Vector2( 160, 183 )
@@ -45,8 +66,18 @@ offset = Vector2( 0, 200 )
 
 offset = Vector2( 0, 250 )
 
+[node name="CameraScroll" type="Tween" parent="."]
+
+process/pause_mode = 2
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
 [connection signal="move" from="MainChar" to="." method="update_camera"]
 
 [connection signal="didWarp" from="Wilderness" to="." method="_on_Wilderness_didWarp"]
+
+[connection signal="tween_complete" from="CameraScroll" to="." method="_on_CameraScroll_tween_complete"]
 
 
