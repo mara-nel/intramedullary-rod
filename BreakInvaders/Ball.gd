@@ -17,7 +17,6 @@ signal outOfBounds
 func _ready():
 	set_fixed_process(true)
 	set_process_input(true)
-	print("howdy")
 
 func reset():
 	set_pos(startPos)
@@ -46,9 +45,9 @@ func _fixed_process(delta):
 	move(velocity*moveSpeed*delta)
 
 # for testing purposes
-func _input(event):
-	if(Input.is_action_pressed("ui_accept")):
-		print(str(velocity))
+#func _input(event):
+#	if(Input.is_action_pressed("ui_accept")):
+#		print(str(velocity))
 
 
 			

@@ -18,11 +18,9 @@ extents = Vector2( 248, 16 )
 
 script/script = ExtResource( 1 )
 
-[node name="Paddle" parent="." instance=ExtResource( 2 )]
-
-transform/pos = Vector2( 160, 400 )
-
 [node name="Walls" type="Node" parent="."]
+
+editor/display_folded = true
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Walls"]
 
@@ -91,7 +89,13 @@ shape = SubResource( 2 )
 trigger = false
 _update_shape_index = 0
 
+[node name="Paddle" parent="." instance=ExtResource( 2 )]
+
+transform/pos = Vector2( 160, 400 )
+
 [node name="bricks" type="Node" parent="."]
+
+editor/display_folded = true
 
 [node name="row" type="Node" parent="bricks"]
 
@@ -160,6 +164,15 @@ wait_time = 3.0
 one_shot = false
 autostart = true
 
+[node name="ReShoot" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 0.5
+one_shot = false
+autostart = false
+
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+
+[connection signal="timeout" from="ReShoot" to="." method="_on_ReShoot_timeout"]
 
 
