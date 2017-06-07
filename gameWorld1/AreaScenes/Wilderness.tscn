@@ -40,6 +40,8 @@ __meta__ = {
 
 [node name="Marnemies" type="Node" parent="."]
 
+editor/display_folded = true
+
 [node name="Marnemy" parent="Marnemies" instance=ExtResource( 3 )]
 
 transform/pos = Vector2( 72, 64 )
@@ -153,5 +155,12 @@ transform/pos = Vector2( 872, -688 )
 [node name="ArcticCaveExit" type="Position2D" parent="Warpers"]
 
 transform/pos = Vector2( -168, -736 )
+
+[node name="Tween" type="Tween" parent="."]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
 
 

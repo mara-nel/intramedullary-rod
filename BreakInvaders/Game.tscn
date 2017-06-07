@@ -1,0 +1,165 @@
+[gd_scene load_steps=6 format=1]
+
+[ext_resource path="res://Game.gd" type="Script" id=1]
+[ext_resource path="res://Paddle.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Brick.tscn" type="PackedScene" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+custom_solver_bias = 0.0
+extents = Vector2( 10, 17.0534 )
+
+[sub_resource type="RectangleShape2D" id=2]
+
+custom_solver_bias = 0.0
+extents = Vector2( 248, 16 )
+
+[node name="Game" type="Node"]
+
+script/script = ExtResource( 1 )
+
+[node name="Paddle" parent="." instance=ExtResource( 2 )]
+
+transform/pos = Vector2( 160, 400 )
+
+[node name="Walls" type="Node" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Walls"]
+
+editor/display_folded = true
+transform/pos = Vector2( -16, 264 )
+transform/scale = Vector2( 0.5, 8.25 )
+input/pickable = false
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 2.9, 0, 0, 2.21763, 0, 0 )
+shapes/0/trigger = false
+collision/layers = 4
+collision/mask = 4
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D"]
+
+transform/scale = Vector2( 2.9, 2.21763 )
+shape = SubResource( 1 )
+trigger = false
+_update_shape_index = 0
+
+[node name="StaticBody2D1" type="StaticBody2D" parent="Walls"]
+
+editor/display_folded = true
+transform/pos = Vector2( 336, 264 )
+transform/scale = Vector2( 0.5, 8.25 )
+input/pickable = false
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 2.9, 0, 0, 2.21763, 0, 0 )
+shapes/0/trigger = false
+collision/layers = 4
+collision/mask = 4
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D1"]
+
+transform/scale = Vector2( 2.9, 2.21763 )
+shape = SubResource( 1 )
+trigger = false
+_update_shape_index = 0
+
+[node name="StaticBody2D 2" type="StaticBody2D" parent="Walls"]
+
+editor/display_folded = true
+transform/pos = Vector2( 152, -16 )
+input/pickable = false
+shapes/0/shape = SubResource( 2 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+collision/layers = 4
+collision/mask = 4
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D 2"]
+
+shape = SubResource( 2 )
+trigger = false
+_update_shape_index = 0
+
+[node name="bricks" type="Node" parent="."]
+
+[node name="row" type="Node" parent="bricks"]
+
+editor/display_folded = true
+
+[node name="Brick" parent="bricks/row" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 120, 96 )
+
+[node name="Brick1" parent="bricks/row" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 200, 96 )
+
+[node name="Brick2" parent="bricks/row" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 40, 96 )
+
+[node name="Brick3" parent="bricks/row" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 280, 96 )
+
+[node name="row1" type="Node" parent="bricks"]
+
+editor/display_folded = true
+
+[node name="Brick" parent="bricks/row1" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 120, 48 )
+
+[node name="Brick1" parent="bricks/row1" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 280, 48 )
+
+[node name="Brick2" parent="bricks/row1" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 40, 48 )
+
+[node name="Brick3" parent="bricks/row1" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 200, 48 )
+
+[node name="row2" type="Node" parent="bricks"]
+
+editor/display_folded = true
+
+[node name="Brick" parent="bricks/row2" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 120, -40 )
+
+[node name="Brick1" parent="bricks/row2" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 280, -40 )
+
+[node name="Brick2" parent="bricks/row2" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 40, -40 )
+
+[node name="Brick3" parent="bricks/row2" instance=ExtResource( 3 )]
+
+transform/pos = Vector2( 200, -40 )
+
+[node name="Timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 3.0
+one_shot = false
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+
+
