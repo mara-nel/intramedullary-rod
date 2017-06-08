@@ -3,7 +3,7 @@ extends KinematicBody2D
 var DOWN = Vector2(0,1)
 var fallSpeed = 75
 onready var hit = false
-
+onready var isOffScreen = false
 ### get this value from somewhere else
 var bottomScreen = 512
 
@@ -22,6 +22,10 @@ func _fixed_process(delta):
 		var coll = get_collider()
 		if(coll.get_name() == "Paddle"):
 			emit_signal("brickHitPaddle")
+			
+	if(get_pos().y>bottomScreen):
+		isOffScreen = true
+		emit_signal("offScreen")
 		
 
 

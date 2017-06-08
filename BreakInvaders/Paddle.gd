@@ -15,6 +15,7 @@ func _ready():
 func _fixed_process(delta):
 	if(Input.is_action_pressed("ui_left")):
 		move(LEFT*moveSpeed*delta)
+		#set_pos(get_pos()+ LEFT*moveSpeed*delta)
 	elif(Input.is_action_pressed("ui_right")):
 		move(RIGHT*moveSpeed*delta)
 
