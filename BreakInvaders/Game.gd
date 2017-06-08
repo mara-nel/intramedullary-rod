@@ -1,25 +1,30 @@
 extends Node
 
-onready var paddle = get_node("Paddle")
-onready var bricks = get_tree().get_nodes_in_group("brick")
-onready var ball  = preload("res://Ball.tscn")
-onready var shootTimer = get_node("ReShoot")
-onready var brickObject = preload("res://Brick.tscn")
-onready var balls = []
-onready var gameOverContainer = get_node("hud/GameOverCtr")
-
-onready var score = 0
-onready var scoreDisplay = get_node("hud/ScoreCtr/RichTextLabel")
-
-
-onready var gameOver = false
-var readyToShoot = true
-
-const YBrickSpawn = -50
+const YBrickSpawn = 0
 const  XBrickSpawn = 40
 
 const ballCost = 10
 const brickReward = 50
+
+
+onready var paddle = get_node("Paddle")
+onready var ball  = preload("res://Ball.tscn")
+onready var shootTimer = get_node("ReShoot")
+onready var brickObject = preload("res://Brick.tscn")
+onready var gameOverContainer = get_node("hud/GameOverCtr")
+onready var scoreDisplay = get_node("hud/ScoreCtr/RichTextLabel")
+
+onready var bricks = get_tree().get_nodes_in_group("brick")
+onready var balls = []
+
+onready var score = 0
+
+onready var gameOver = false
+onready var readyToShoot = true
+
+onready var bricksKnocked = 0
+onready var ballsShot = 0
+
 
 func _ready():
 	gameOverContainer.hide()
@@ -51,14 +56,21 @@ func _input(event):
 func game_over():
 	gameOver = true
 	gameOverContainer.show()
+	
+	print("Bricks knocked down: "+str(bricksKnocked))
+	print("Balls shot: "+str(ballsShot))
+	
 	get_tree().set_pause(true)
 
 func brickOffScreen():
 	for brick in bricks:
 		if(brick.isOffScreen):
+			if(!brick.hit):
+				game_over()
 			brick.queue_free()
 			bricks.erase(brick)
 
+#creates a new row of bricks to slowly move down
 func makeRowOfBricks():
 	var XDisplaced = 0
 	for x in range(0,4):
@@ -71,16 +83,21 @@ func makeRowOfBricks():
 		br.connect("brickKnockedDown", self, "_on_BrickKnocked")
 		br.connect("offScreen", self, "brickOffScreen")
 
+# the function to add a ball to the game
 func addBall():
 	var	b = ball.instance()
 	b.connect("outOfBounds", self, "ballOffScreen")
 	b.set_pos(paddle.get_pos() + paddle.ballSpawnPt.get_pos())
 	add_child(b)
+	#start a short 'reload' timer
 	readyToShoot = false
 	shootTimer.start()
 	score -= ballCost
 	balls.append(b)
 	
+	ballsShot += 1
+
+#removes balls that are off the screen (ie not coming back)
 func ballOffScreen():
 	for ball in balls:
 		if(ball.isOffScreen):
@@ -103,11 +120,12 @@ func _on_SpawnBricks_timeout():
 
 func _on_BrickKnocked():
 	score += brickReward
+	bricksKnocked +=1
 
 
 func updateScore():
 	scoreDisplay.clear()
-	scoreDisplay.append_bbcode("[right]"+str(int(score))+"[/right]")
+	scoreDisplay.append_bbcode("[center]"+str(int(score))+"[/center]")
 
 
 func newGame():
