@@ -6,11 +6,15 @@ onready var ball  = preload("res://Ball.tscn")
 onready var shootTimer = get_node("ReShoot")
 onready var brickObject = preload("res://Brick.tscn")
 
+onready var gameOverContainer = get_node("hud/GameOverCtr")
+
+onready var gameOver = false
 var readyToShoot = true
 var YBrickSpawn = -50
 var XBrickSpawn = 40
 
 func _ready():
+	gameOverContainer.hide()
 	for brick in bricks:
 		brick.connect("brickHitPaddle", self, "game_over")
 		brick.connect("offScreen", self, "brickOffScreen")
@@ -19,19 +23,23 @@ func _ready():
 
 func _input(event):
 	var shoot = event.is_action_pressed("ui_accept")
+	if(!gameOver):
+		if(shoot and readyToShoot):
+			var	b = ball.instance()
+			b.set_pos(paddle.get_pos() + paddle.ballSpawnPt.get_pos())
+			add_child(b)
+			readyToShoot = false
+			shootTimer.start()
+
+		if(event.is_action_pressed("ui_cancel")):
+			print(get_children().size())
+	else:
+		if(event.is_action_pressed("ui_accept")):
+			newGame()
 	
-	if(shoot and readyToShoot):
-		var	b = ball.instance()
-		b.set_pos(paddle.get_pos() + paddle.ballSpawnPt.get_pos())
-		add_child(b)
-		readyToShoot = false
-		shootTimer.start()
-
-	if(event.is_action_pressed("ui_cancel")):
-		print(get_children().size())
-
 func game_over():
-	print("game over")
+	gameOver = true
+	gameOverContainer.show()
 	get_tree().set_pause(true)
 
 func brickOffScreen():
@@ -53,9 +61,6 @@ func makeRowOfBricks():
 
 
 
-
-
-
 func _on_Timer_timeout():
 	for brick in bricks:
 		if(!brick.hit):
@@ -68,3 +73,10 @@ func _on_ReShoot_timeout():
 
 func _on_SpawnBricks_timeout():
 	makeRowOfBricks()
+
+
+func newGame():
+	gameOver = false
+	get_tree().set_pause(false)
+	get_tree().reload_current_scene()
+	

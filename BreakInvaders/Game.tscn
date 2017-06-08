@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
 [ext_resource path="res://Paddle.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Brick.tscn" type="PackedScene" id=3]
+[ext_resource path="res://playButton.tex" type="Texture" id=4]
+[ext_resource path="res://playButtonP.tex" type="Texture" id=5]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 
@@ -32,6 +34,7 @@ script/script = ExtResource( 1 )
 "wall",
 ]]
 
+editor/display_folded = true
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
@@ -64,6 +67,8 @@ trigger = false
 transform/pos = Vector2( 160, 400 )
 
 [node name="bricks" type="Node" parent="."]
+
+editor/display_folded = true
 
 [node name="row" type="Node" parent="bricks"]
 
@@ -123,31 +128,77 @@ transform/pos = Vector2( 40, -8 )
 
 transform/pos = Vector2( 200, -8 )
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." groups=[
+"timer",
+]]
 
 process_mode = 1
 wait_time = 3.0
 one_shot = false
 autostart = true
 
-[node name="ReShoot" type="Timer" parent="."]
+[node name="ReShoot" type="Timer" parent="." groups=[
+"timer",
+]]
 
 process_mode = 1
 wait_time = 0.5
 one_shot = false
 autostart = false
 
-[node name="SpawnBricks" type="Timer" parent="."]
+[node name="SpawnBricks" type="Timer" parent="." groups=[
+"timer",
+]]
 
 process_mode = 1
 wait_time = 6.0
 one_shot = false
 autostart = true
 
+[node name="hud" type="CanvasLayer" parent="."]
+
+process/pause_mode = 2
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="GameOverCtr" type="Container" parent="hud"]
+
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 40.0
+
+[node name="TextureButton" type="TextureButton" parent="hud/GameOverCtr"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 112.0
+margin/top = 200.0
+margin/right = 212.0
+margin/bottom = 264.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 4 )
+textures/pressed = ExtResource( 5 )
+params/resize_mode = 0
+params/stretch_mode = 0
+
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 
 [connection signal="timeout" from="ReShoot" to="." method="_on_ReShoot_timeout"]
 
 [connection signal="timeout" from="SpawnBricks" to="." method="_on_SpawnBricks_timeout"]
+
+[connection signal="pressed" from="hud/GameOverCtr/TextureButton" to="." method="newGame"]
 
 
