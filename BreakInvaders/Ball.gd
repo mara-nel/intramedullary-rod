@@ -1,18 +1,17 @@
 extends KinematicBody2D
 
 var velocity 
-var moveSpeed = 125
+var moveSpeed = 150
 
 var startPos = Vector2(160,330)
 #these are dependent on window size, so some better way of 
 # passing that information on should be used rather than just 
 # redefining them here
-var leftBound = 0
-var rightBound = 300
-var upBound = 0
-var downBound = 512
+
+const downBound = 512
 
 signal outOfBounds
+onready var isOffScreen = false
 
 func _ready():
 	
@@ -42,7 +41,9 @@ func _fixed_process(delta):
 
 	#some slight gravity
 	#velocity.y += .001
-
+	if(get_pos().y > downBound):
+		isOffScreen = true
+		emit_signal("outOfBounds")
 	move(velocity*moveSpeed*delta)
 
 # for testing purposes

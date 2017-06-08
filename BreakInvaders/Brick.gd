@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 var DOWN = Vector2(0,1)
-var fallSpeed = 75
+var fallSpeed = 100
 onready var hit = false
 onready var isOffScreen = false
 ### get this value from somewhere else

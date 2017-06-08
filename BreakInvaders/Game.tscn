@@ -135,7 +135,7 @@ transform/pos = Vector2( 200, 8 )
 ]]
 
 process_mode = 1
-wait_time = 3.0
+wait_time = 2.5
 one_shot = false
 autostart = true
 
@@ -144,7 +144,7 @@ autostart = true
 ]]
 
 process_mode = 1
-wait_time = 0.5
+wait_time = 0.2
 one_shot = false
 autostart = false
 
@@ -153,7 +153,7 @@ autostart = false
 ]]
 
 process_mode = 1
-wait_time = 6.0
+wait_time = 5.0
 one_shot = false
 autostart = true
 
