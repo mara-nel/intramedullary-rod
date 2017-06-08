@@ -8,18 +8,28 @@ onready var brickObject = preload("res://Brick.tscn")
 
 onready var gameOverContainer = get_node("hud/GameOverCtr")
 
+onready var score = 0
+onready var scoreDisplay = get_node("hud/ScoreCtr/RichTextLabel")
+
+
 onready var gameOver = false
 var readyToShoot = true
-var YBrickSpawn = -50
-var XBrickSpawn = 40
+const YBrickSpawn = -50
+const  XBrickSpawn = 40
 
 func _ready():
 	gameOverContainer.hide()
 	for brick in bricks:
 		brick.connect("brickHitPaddle", self, "game_over")
 		brick.connect("offScreen", self, "brickOffScreen")
+		brick.connect("brickKnockedDown", self, "_on_BrickKnocked")
 	set_fixed_process(true)
 	set_process_input(true)
+
+func _fixed_process(delta):
+	score += 5*delta
+	updateScore()
+
 
 func _input(event):
 	var shoot = event.is_action_pressed("ui_accept")
@@ -30,6 +40,7 @@ func _input(event):
 			add_child(b)
 			readyToShoot = false
 			shootTimer.start()
+			score -= 10
 
 		if(event.is_action_pressed("ui_cancel")):
 			print(get_children().size())
@@ -45,7 +56,6 @@ func game_over():
 func brickOffScreen():
 	for brick in bricks:
 		if(brick.isOffScreen):
-			print("removed")
 			brick.queue_free()
 			bricks.erase(brick)
 
@@ -58,7 +68,8 @@ func makeRowOfBricks():
 		XDisplaced += 80
 		bricks.append(br)
 		br.connect("brickHitPaddle", self, "game_over")
-
+		br.connect("brickKnockedDown", self, "_on_BrickKnocked")
+		br.connect("offScreen", self, "brickOffScreen")
 
 
 func _on_Timer_timeout():
@@ -73,6 +84,14 @@ func _on_ReShoot_timeout():
 
 func _on_SpawnBricks_timeout():
 	makeRowOfBricks()
+
+func _on_BrickKnocked():
+	score += 100
+
+
+func updateScore():
+	scoreDisplay.clear()
+	scoreDisplay.append_bbcode("[right]"+str(int(score))+"[/right]")
 
 
 func newGame():

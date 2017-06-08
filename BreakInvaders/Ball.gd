@@ -31,14 +31,6 @@ func _ready():
 
 func _fixed_process(delta):
 	var movingTo = get_pos() + velocity*delta
-#	if(movingTo.x > rightBound):
-#		velocity.x = -velocity.x
-#	elif(movingTo.x < leftBound):
-#		velocity.x = -velocity.x
-#	if(movingTo.y < upBound):
-#		velocity.y = -velocity.y
-#	elif(movingTo.y > downBound):
-#		emit_signal("outOfBounds")
 	
 	if(is_colliding()):
 		#print(str(rad2deg(velocity.angle())))

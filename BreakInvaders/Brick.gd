@@ -9,6 +9,7 @@ var bottomScreen = 512
 
 signal brickHitPaddle
 signal offScreen
+signal brickKnockedDown
 
 func _ready():
 	set_fixed_process(true)
@@ -34,4 +35,5 @@ func wasHit():
 	set_collision_mask_bit(0,false)
 	set_collision_mask_bit(1,true)
 	set_layer_mask_bit(0,false)
-	set_layer_mask_bit(1,true)
+	#set_layer_mask_bit(1,true)
+	emit_signal("brickKnockedDown")
