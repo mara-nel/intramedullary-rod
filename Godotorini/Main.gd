@@ -8,6 +8,10 @@ var player
 var Board
 var cell
 
+var boardCoords
+var ctrCoords
+
+
 
 
 func _ready():
@@ -28,6 +32,8 @@ func _input(event):
 	if event is InputEventMouseButton:
 		#mouseClickPos = event.positiona
 		print("Mouse Click/Unclick at: ", event.position)
-		print(" which is in tile: ", Board.world_to_map(event.position))
-		print(" with center coord: ", Board.map_to_world(Board.world_to_map(event.position)))
-
+		boardCoords = Board.world_to_map(event.position)
+		print(" which is in tile: ", boardCoords)
+		ctrCoords = Board.map_to_world(Board.world_to_map(event.position))
+		print(" with center coord: ", ctrCoords)
+		player.move(ctrCoords)
