@@ -14,12 +14,14 @@ var ctrCoords
 
 
 
+
 func _ready():
 	# Called every time the node is added to the scene.
 	# Initialization here
 	player = get_node("Player1")
 	Board = get_node("Board")
 	#tiles = Board.get_tileset()
+	player.set_state_move()
 	
 	
 
@@ -36,4 +38,6 @@ func _input(event):
 		print(" which is in tile: ", boardCoords)
 		ctrCoords = Board.map_to_world(Board.world_to_map(event.position))
 		print(" with center coord: ", ctrCoords)
-		player.move(ctrCoords)
+		if player.is_ready_to_move():
+			player.move(ctrCoords)
+			player.set_state_build()

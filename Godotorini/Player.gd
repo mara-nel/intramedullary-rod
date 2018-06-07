@@ -10,16 +10,36 @@ var moves = {'right': Vector2(1,0),
 			 'up': Vector2(0,-1),
 			 'down': Vector2(0,1) }
 
+var state
+var validStates = ['rest', 'move', 'build']
 
 
 func _ready():
 	# Called every time the node is added to the scene.
 	# Initialization here
 	screensize = get_viewport_rect().size
+	state = validStates[0]
 
 
 func move(location):
 	position = location
+
+
+func set_state(new_state):
+	state = new_state
+
+func set_state_rest():
+	state = validStates[0]
+func set_state_move():
+	state = validStates[1]
+func set_state_build():
+	state = validStates[2]
+	
+func is_ready_to_move():
+	return state == validStates[1]
+func is_ready_to_build():
+	return state == validStates[2]
+
 
 
 func _process(delta):
