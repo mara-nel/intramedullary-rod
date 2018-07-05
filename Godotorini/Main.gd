@@ -8,8 +8,8 @@ var player
 var Board
 var cell
 
-var boardCoords
-var ctrCoords
+var board_coords
+var ctr_coords
 
 var click
 
@@ -36,25 +36,40 @@ func _input(event):
 	if event is InputEventMouseButton:
 		click = change_click()#mouseClickPos = event.positiona
 		print("Mouse Click/Unclick at: ", event.position)
-		boardCoords = Board.world_to_map(event.position)
-		print(" which is in tile: ", boardCoords)
-		ctrCoords = Board.map_to_world(Board.world_to_map(event.position))
-		print(" with center coord: ", ctrCoords)
+		board_coords = Board.world_to_map(event.position)
+		print(" which is in tile: ", board_coords)
+		ctr_coords = Board.map_to_world(Board.world_to_map(event.position))
+		print(" with center coord: ", ctr_coords)
 		if click:
-			if player.is_ready_to_move():
-				player.move(ctrCoords)
+			#in future there might be multiple player nodes, so a player select
+			# would be made, in that step player position could get recorded as
+			# it is done here
+			var player_board_position = Board.world_to_map(player.get_position())
+			if player.is_ready_to_move() and are_neighbors(board_coords,player_board_position):
+				player.move(ctr_coords)
 				player.set_state_build()
-			elif player.is_ready_to_build() and ctrCoords != player.get_position():
-				build_floor(ctrCoords)
+			elif player.is_ready_to_build() and ctr_coords != player.get_position():
+				if are_neighbors(board_coords, player_board_position):
+					build_floor(ctr_coords)
 
 func change_click():
 	return !click
 
-func build_floor(ctrCoords):
+func build_floor(ctr_coords):
 	var scene = load("res://BottomFloor.tscn")
 	var scene_instance = scene.instance()
 	scene_instance.set_name("newFloor")
-	scene_instance.set_position(ctrCoords)
+	scene_instance.set_position(ctr_coords)
 	get_node("Floors").add_child(scene_instance)
 	#add_child(scene_instance)
 	player.set_state_move()
+
+#the game takes place on a grid, the below returns true if the two points
+# are for grid points that are neighbors (including diagonals)
+func are_neighbors(board_cell_1, board_cell_2):
+	var x_difference = abs(board_cell_1.x - board_cell_2.x)
+	var y_difference = abs(board_cell_1.y - board_cell_2.y)
+	if x_difference <= 1 and y_difference <=1:
+		return true
+	else:
+		return false
