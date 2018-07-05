@@ -37,11 +37,10 @@ __meta__ = {
 
 [node name="Floors" type="Node" parent="." index="1"]
 
-editor/display_folded = true
-
 [node name="BottomFloor" parent="Floors" index="0" instance=ExtResource( 4 )]
 
 position = Vector2( 224, 32 )
+_sections_unfolded = [ "Transform" ]
 
 [node name="Player1" parent="." index="2" instance=ExtResource( 5 )]
 

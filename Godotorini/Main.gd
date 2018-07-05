@@ -11,6 +11,8 @@ var cell
 var boardCoords
 var ctrCoords
 
+var click
+
 
 
 
@@ -22,7 +24,7 @@ func _ready():
 	Board = get_node("Board")
 	#tiles = Board.get_tileset()
 	player.set_state_move()
-	
+	click = false
 	
 
 func _process(delta):
@@ -32,12 +34,27 @@ func _process(delta):
 
 func _input(event):
 	if event is InputEventMouseButton:
-		#mouseClickPos = event.positiona
+		click = change_click()#mouseClickPos = event.positiona
 		print("Mouse Click/Unclick at: ", event.position)
 		boardCoords = Board.world_to_map(event.position)
 		print(" which is in tile: ", boardCoords)
 		ctrCoords = Board.map_to_world(Board.world_to_map(event.position))
 		print(" with center coord: ", ctrCoords)
-		if player.is_ready_to_move():
-			player.move(ctrCoords)
-			player.set_state_build()
+		if click:
+			if player.is_ready_to_move():
+				player.move(ctrCoords)
+				player.set_state_build()
+			elif player.is_ready_to_build() and ctrCoords != player.get_position():
+				build_floor(ctrCoords)
+
+func change_click():
+	return !click
+
+func build_floor(ctrCoords):
+	var scene = load("res://BottomFloor.tscn")
+	var scene_instance = scene.instance()
+	scene_instance.set_name("newFloor")
+	scene_instance.set_position(ctrCoords)
+	get_node("Floors").add_child(scene_instance)
+	#add_child(scene_instance)
+	player.set_state_move()
