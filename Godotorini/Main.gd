@@ -9,11 +9,11 @@ var Board
 var cell
 
 var board_coords
-var ctr_coords
+var click_ctr_coords
 
 var click
 
-
+var board_matrix
 
 
 
@@ -25,6 +25,7 @@ func _ready():
 	#tiles = Board.get_tileset()
 	player.set_state_move()
 	click = false
+	initialize_board_matrix()
 	
 
 func _process(delta):
@@ -35,32 +36,58 @@ func _process(delta):
 func _input(event):
 	if event is InputEventMouseButton:
 		click = change_click()#mouseClickPos = event.positiona
-		print("Mouse Click/Unclick at: ", event.position)
+		#print("Mouse Click/Unclick at: ", event.position)
 		board_coords = Board.world_to_map(event.position)
-		print(" which is in tile: ", board_coords)
-		ctr_coords = Board.map_to_world(Board.world_to_map(event.position))
-		print(" with center coord: ", ctr_coords)
+		#print(" which is in tile: ", board_coords)
+		click_ctr_coords = Board.map_to_world(board_coords)
+		#print(" with center coord: ", click_ctr_coords)
 		if click:
 			#in future there might be multiple player nodes, so a player select
 			# would be made, in that step player position could get recorded as
 			# it is done here
 			var player_board_position = Board.world_to_map(player.get_position())
+			
 			if player.is_ready_to_move() and are_neighbors(board_coords,player_board_position):
-				player.move(ctr_coords)
+				player.move(click_ctr_coords)
 				player.set_state_build()
-			elif player.is_ready_to_build() and ctr_coords != player.get_position():
-				if are_neighbors(board_coords, player_board_position):
-					build_floor(ctr_coords)
+			elif player.is_ready_to_build() and click_ctr_coords != player.get_position():
+				try_to_build(board_coords, player_board_position)
+			print_matrix()
+
 
 func change_click():
 	return !click
 
-func build_floor(ctr_coords):
+#checks if the selected spot can be built upon ie checks if:
+#  space is neighboring selected player
+#  no one occupies seleced space
+#  not occupied by tallest building
+# if everything is met, it builds the next level
+func try_to_build(square_to_build_in, selected_player_board_position):
+	var space_occupied = false
+	if square_to_build_in == selected_player_board_position:
+		space_occupied = true
+	
+	
+	#check to see if squares are adjacent
+	if !are_neighbors(square_to_build_in, selected_player_board_position):
+		pass
+	#TODO, iterate over all characters rather than just one
+	elif space_occupied:
+		pass
+	else:
+		build_floor(square_to_build_in)
+
+func build_floor(square_to_build_in):
 	var scene = load("res://BottomFloor.tscn")
 	var scene_instance = scene.instance()
 	scene_instance.set_name("newFloor")
-	scene_instance.set_position(ctr_coords)
-	get_node("Floors").add_child(scene_instance)
+	var to_build_coords = Board.map_to_world(square_to_build_in)
+	scene_instance.set_position(to_build_coords)
+	get_node("Level_1").add_child(scene_instance)
+	
+	update_board_matrix(square_to_build_in)
+	
 	#add_child(scene_instance)
 	player.set_state_move()
 
@@ -73,3 +100,24 @@ func are_neighbors(board_cell_1, board_cell_2):
 		return true
 	else:
 		return false
+
+
+
+func update_board_matrix(board_coord):
+	var coord_x = board_coord[0]
+	var coord_y = board_coord[1]
+	board_matrix[coord_y][coord_x] += 1
+
+
+func initialize_board_matrix():
+	board_matrix = []
+	for x in range(5):
+		board_matrix.append([])
+		for y in range(5):
+			board_matrix[x].append(0)
+
+func print_matrix():
+	for row in range(5):
+		print(board_matrix[row])
+	print('----------')
+

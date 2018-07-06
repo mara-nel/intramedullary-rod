@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://mytiles.tres" type="TileSet" id=2]
 [ext_resource path="res://Board.gd" type="Script" id=3]
-[ext_resource path="res://BottomFloor.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=4]
 
 [node name="Main" type="Node" index="0"]
 
@@ -35,14 +34,11 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Floors" type="Node" parent="." index="1"]
+[node name="Level_1" type="Node" parent="." index="1"]
 
-[node name="BottomFloor" parent="Floors" index="0" instance=ExtResource( 4 )]
+[node name="Level_2" type="Node" parent="." index="2"]
 
-position = Vector2( 224, 32 )
-_sections_unfolded = [ "Transform" ]
-
-[node name="Player1" parent="." index="2" instance=ExtResource( 5 )]
+[node name="Player1" parent="." index="3" instance=ExtResource( 4 )]
 
 position = Vector2( 114, 103 )
 
