@@ -3,6 +3,7 @@ extends Node
 # class member variables go here, for example:
 # var a = 2
 # var b = "textvar"
+var MAX_HEIGHT = 2
 
 var player
 var Board
@@ -47,16 +48,40 @@ func _input(event):
 			# it is done here
 			var player_board_position = Board.world_to_map(player.get_position())
 			
-			if player.is_ready_to_move() and are_neighbors(board_coords,player_board_position):
-				player.move(click_ctr_coords)
-				player.set_state_build()
-			elif player.is_ready_to_build() and click_ctr_coords != player.get_position():
+			if player.is_ready_to_move():
+				try_to_move(player, board_coords)
+
+			elif player.is_ready_to_build():
 				try_to_build(board_coords, player_board_position)
 			print_matrix()
 
 
 func change_click():
 	return !click
+
+
+func try_to_move(player, board_coord):
+	var player_board_coord = coord_to_board_coord(player.get_position())
+	var current_height = get_build_height(player_board_coord)
+	var move_to_height = get_build_height(board_coord)
+	var space_occupied = false
+	
+	#in future will iterate through all 'players'
+	if board_coord == player_board_coord:
+		space_occupied = true
+		
+	if !are_neighbors(board_coords,player_board_coord):
+		pass
+	elif move_to_height - current_height > 1:
+		pass
+	elif space_occupied:
+		pass
+	else:
+		player.move(Board.map_to_world(board_coord))
+		player.set_state_build()
+
+
+
 
 #checks if the selected spot can be built upon ie checks if:
 #  space is neighboring selected player
@@ -68,23 +93,34 @@ func try_to_build(square_to_build_in, selected_player_board_position):
 	if square_to_build_in == selected_player_board_position:
 		space_occupied = true
 	
-	
 	#check to see if squares are adjacent
 	if !are_neighbors(square_to_build_in, selected_player_board_position):
 		pass
 	#TODO, iterate over all characters rather than just one
 	elif space_occupied:
 		pass
+	#checks if there is still room to build another level onto
+	elif is_too_tall(square_to_build_in):
+		pass
 	else:
 		build_floor(square_to_build_in)
 
 func build_floor(square_to_build_in):
-	var scene = load("res://BottomFloor.tscn")
-	var scene_instance = scene.instance()
-	scene_instance.set_name("newFloor")
-	var to_build_coords = Board.map_to_world(square_to_build_in)
-	scene_instance.set_position(to_build_coords)
-	get_node("Level_1").add_child(scene_instance)
+	var current_level = get_build_height(square_to_build_in)
+	if current_level == 0:
+		var scene = load("res://BottomFloor.tscn")
+		var scene_instance = scene.instance()
+		scene_instance.set_name("new_floor")
+		var to_build_coords = Board.map_to_world(square_to_build_in)
+		scene_instance.set_position(to_build_coords)
+		get_node("Level_1").add_child(scene_instance)
+	elif current_level == 1:
+		var scene = load("res://Floor_2.tscn")
+		var scene_instance = scene.instance()
+		scene_instance.set_name("new_floor")
+		var to_build_coords = Board.map_to_world(square_to_build_in)
+		scene_instance.set_position(to_build_coords)
+		get_node("Level_2").add_child(scene_instance)
 	
 	update_board_matrix(square_to_build_in)
 	
@@ -102,6 +138,19 @@ func are_neighbors(board_cell_1, board_cell_2):
 		return false
 
 
+#returns true if a board_coord is too built upon to build once more
+func is_too_tall(board_coord):
+	var coord_x = board_coord[0]
+	var coord_y = board_coord[1]
+	if board_matrix[coord_y][coord_x] >= MAX_HEIGHT:
+		return true
+	else:
+		return false
+
+func get_build_height(board_coord):
+	var coord_x = board_coord[0]
+	var coord_y = board_coord[1]
+	return board_matrix[coord_y][coord_x]
 
 func update_board_matrix(board_coord):
 	var coord_x = board_coord[0]
@@ -121,3 +170,5 @@ func print_matrix():
 		print(board_matrix[row])
 	print('----------')
 
+func coord_to_board_coord(coord):
+	return Board.world_to_map(coord)
