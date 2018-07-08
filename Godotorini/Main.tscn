@@ -37,6 +37,10 @@ __meta__ = {
 
 [node name="Level_2" type="Node" parent="." index="2"]
 
-[node name="Players" type="Node" parent="." index="3"]
+[node name="Level_3" type="Node" parent="." index="3"]
+
+[node name="Players" type="Node" parent="." index="4"]
+
+[node name="Caps" type="Node" parent="." index="5"]
 
 

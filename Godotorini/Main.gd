@@ -3,7 +3,7 @@ extends Node
 # class member variables go here, for example:
 # var a = 2
 # var b = "textvar"
-var MAX_HEIGHT = 2
+var MAX_HEIGHT = 4
 var PLAYERS_PER_TEAM = 2
 
 var PLACE_PLAYERS = 0
@@ -140,6 +140,9 @@ func try_to_move(player, board_coord):
 		pass
 	elif space_occupied:
 		pass
+	#checks if capped (as of now capped is just a level 4)
+	elif get_build_height(board_coord) == 4:
+		pass
 	else:
 		player.move(Board.map_to_world(board_coord))
 		player.set_state_build()
@@ -183,6 +186,22 @@ func build_floor(square_to_build_in):
 		var to_build_coords = Board.map_to_world(square_to_build_in)
 		scene_instance.set_position(to_build_coords)
 		get_node("Level_2").add_child(scene_instance)
+	elif current_level == 2:
+		var scene = load("res://Level_3.tscn")
+		var scene_instance = scene.instance()
+		scene_instance.set_name("new_floor")
+		var to_build_coords = Board.map_to_world(square_to_build_in)
+		scene_instance.set_position(to_build_coords)
+		get_node("Level_3").add_child(scene_instance)
+	elif current_level == 3:
+		var scene = load("res://Cap.tscn")
+		var scene_instance = scene.instance()
+		scene_instance.set_name("new_floor")
+		var to_build_coords = Board.map_to_world(square_to_build_in)
+		scene_instance.set_position(to_build_coords)
+		get_node("Caps").add_child(scene_instance)
+	
+	
 	
 	update_board_matrix(square_to_build_in)
 	
