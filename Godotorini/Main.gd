@@ -109,28 +109,30 @@ func select_player(selected_square):
 #adds a new player token of a given team to a given location
 #currently doesn't look at team
 func add_player(team, spawn_location):
-	var scene = load("res://Player.tscn")
-	var scene_instance = scene.instance()
-	scene_instance.set_name("new_player")
-	if team == TEAM_TWO:
-		scene_instance.get_node("Sprite").set_texture(load("res://p2.png"))
+	var is_occupied = is_occupied_by_player(spawn_location)
+	#is_occupied = is_occupied_by_player(spawn_location)
 	
-	var to_build_coords = Board.map_to_world(spawn_location)
-	scene_instance.set_position(to_build_coords)
+	if !is_occupied:
+		var scene = load("res://Player.tscn")
+		var scene_instance = scene.instance()
+		scene_instance.set_name("new_player")
+		if team == TEAM_TWO:
+			scene_instance.get_node("Sprite").set_texture(load("res://p2.png"))
 	
-	get_node("Players").add_child(scene_instance)
+		var to_build_coords = Board.map_to_world(spawn_location)
+		scene_instance.set_position(to_build_coords)
+	
+		get_node("Players").add_child(scene_instance)
 	
 
 func try_to_move(player, board_coord):
 	var player_board_coord = coord_to_board_coord(player.get_position())
 	var current_height = get_build_height(player_board_coord)
 	var move_to_height = get_build_height(board_coord)
-	var space_occupied = false
+	var space_occupied = is_occupied_by_player(board_coord)
 	
 	#iterate through all player tokens
-	for node in get_node("Players").get_children():
-		if board_coord == coord_to_board_coord(node.get_position()):
-			space_occupied = true
+	#space_occupied = is_occupied_by_player(board_coord)
 
 	if !are_neighbors(board_coords,player_board_coord):
 		pass
@@ -148,18 +150,14 @@ func try_to_move(player, board_coord):
 #  not occupied by tallest building
 # if everything is met, it builds the next level
 func try_to_build(square_to_build_in, selected_player_board_position):
-	var space_occupied = false
+	var space_occupied = is_occupied_by_player(square_to_build_in)
 	
 	#iterate through all player tokens
-	for node in get_node("Players").get_children():
-		if square_to_build_in == coord_to_board_coord(node.get_position()):
-			space_occupied = true
-	
+	#space_occupied 
 	
 	#check to see if squares are adjacent
 	if !are_neighbors(square_to_build_in, selected_player_board_position):
 		pass
-	#TODO, iterate over all characters rather than just one
 	elif space_occupied:
 		pass
 	#checks if there is still room to build another level onto
@@ -200,6 +198,14 @@ func are_neighbors(board_cell_1, board_cell_2):
 		return true
 	else:
 		return false
+
+func is_occupied_by_player(board_coord):
+	var is_occupied = false
+	#iterate through all player tokens
+	for node in get_node("Players").get_children():
+		if board_coord == coord_to_board_coord(node.get_position()):
+			is_occupied = true
+	return is_occupied
 
 
 #returns true if a board_coord is too built upon to build once more
