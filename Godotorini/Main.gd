@@ -4,10 +4,13 @@ extends Node
 # var a = 2
 # var b = "textvar"
 var MAX_HEIGHT = 2
-var TOTAL_PLAYERS = 2
+var PLAYERS_PER_TEAM = 2
+
 var PLACE_PLAYERS = 0
 var MAIN_PLAY = 1
 
+var TEAM_ONE = 1
+var TEAM_TWO = 2
 
 
 var player
@@ -51,9 +54,16 @@ func _input(event):
 		#print(" with center coord: ", click_ctr_coords)
 		if click:
 			if state == PLACE_PLAYERS:
-				add_player('',board_coords)
-				print(get_node("Players").get_child_count())
-				if get_node("Players").get_child_count() >= TOTAL_PLAYERS:
+				var number_of_players = get_node("Players").get_child_count()
+				if number_of_players < PLAYERS_PER_TEAM:
+					add_player(TEAM_ONE,board_coords)
+					print(get_node("Players").get_child_count())
+				elif number_of_players < 2*PLAYERS_PER_TEAM-1:
+					add_player(TEAM_TWO,board_coords)
+					print(get_node("Players").get_child_count())
+				else:
+					add_player(TEAM_TWO,board_coords)
+					print(get_node("Players").get_child_count())
 					state = MAIN_PLAY
 					print('state is: ',state)
 			elif state == MAIN_PLAY:
@@ -102,8 +112,12 @@ func add_player(team, spawn_location):
 	var scene = load("res://Player.tscn")
 	var scene_instance = scene.instance()
 	scene_instance.set_name("new_player")
+	if team == TEAM_TWO:
+		scene_instance.get_node("Sprite").set_texture(load("res://p2.png"))
+	
 	var to_build_coords = Board.map_to_world(spawn_location)
 	scene_instance.set_position(to_build_coords)
+	
 	get_node("Players").add_child(scene_instance)
 	
 
