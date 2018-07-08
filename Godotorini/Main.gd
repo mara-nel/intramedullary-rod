@@ -21,19 +21,20 @@ var click
 
 var board_matrix
 var state
+var player_selected
 
 
 func _ready():
 	# Called every time the node is added to the scene.
 	# Initialization here
-	player = get_node("Players/Player1")
+	#player = get_node("Players/Player1")
 	Board = get_node("Board")
 	#tiles = Board.get_tileset()
-	player.set_state_move()
+	#player.set_state_move()
 	click = false
 	initialize_board_matrix()
 	state = PLACE_PLAYERS
-	print('readied')
+	no_player_is_selected()
 
 func _process(delta):
 	# Called every frame. Delta is time since last frame.
@@ -59,18 +60,41 @@ func _input(event):
 			#in future there might be multiple player nodes, so a player select
 			# would be made, in that step player position could get recorded as
 			# it is done here
-				var player_board_position = Board.world_to_map(player.get_position())
-				
-				if player.is_ready_to_move():
+
+				if !player_selected:
+					select_player(board_coords)
+					print('trying to select')
+
+				elif player.is_ready_to_move():
 					try_to_move(player, board_coords)
+					print('trying to move')
 
 				elif player.is_ready_to_build():
+					var player_board_position = Board.world_to_map(player.get_position())
 					try_to_build(board_coords, player_board_position)
-				print_matrix()
+					print('trying to build')
+				#print_matrix()
 
 #used to help distinguish between down click and unclick of the mouse
 func change_click():
 	return !click
+
+
+func no_player_is_selected():
+	player_selected = false
+func player_is_selected():
+	player_selected = true
+
+#checks if a player is in a given square, if so it makes said player
+# the 'selected' player
+func select_player(selected_square):
+	#iterate through all player tokens
+	for node in get_node("Players").get_children():
+		if selected_square == coord_to_board_coord(node.get_position()):
+			player = node
+			player.set_state_move()
+			player_is_selected()
+
 
 #adds a new player token of a given team to a given location
 #currently doesn't look at team
@@ -82,9 +106,6 @@ func add_player(team, spawn_location):
 	scene_instance.set_position(to_build_coords)
 	get_node("Players").add_child(scene_instance)
 	
-
-
-
 
 func try_to_move(player, board_coord):
 	var player_board_coord = coord_to_board_coord(player.get_position())
@@ -132,6 +153,7 @@ func try_to_build(square_to_build_in, selected_player_board_position):
 		pass
 	else:
 		build_floor(square_to_build_in)
+		no_player_is_selected()
 
 func build_floor(square_to_build_in):
 	var current_level = get_build_height(square_to_build_in)
@@ -164,6 +186,7 @@ func are_neighbors(board_cell_1, board_cell_2):
 		return true
 	else:
 		return false
+
 
 #returns true if a board_coord is too built upon to build once more
 func is_too_tall(board_coord):
