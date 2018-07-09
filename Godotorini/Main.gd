@@ -69,10 +69,6 @@ func _input(event):
 					state = MAIN_PLAY
 					print('state is: ',state)
 			elif state == MAIN_PLAY:
-			#in future there might be multiple player nodes, so a player select
-			# would be made, in that step player position could get recorded as
-			# it is done here
-
 				if !player_selected:
 					select_player(board_coords)
 					print('trying to select')
@@ -86,6 +82,10 @@ func _input(event):
 					try_to_build(board_coords, player_board_position)
 					print('trying to build')
 				#print_matrix()
+	#eventually want some sort of restart button
+	#elif event is InputEventKey:
+	#	if Input.is_key_pressed(KEY_R):
+	#		_ready() #does not do it all, will need to clear things away too
 
 #used to help distinguish between down click and unclick of the mouse
 func change_click():
@@ -147,10 +147,12 @@ func try_to_move(player, board_coord):
 	elif space_occupied:
 		pass
 	#checks if capped (as of now capped is just a level 4)
-	elif get_build_height(board_coord) == 4:
+	elif move_to_height == 4:
 		pass
 	else:
 		player.move(Board.map_to_world(board_coord))
+		if move_to_height == 3:
+			print(players_turn, " just won")
 		player.set_state_build()
 
 #checks if the selected spot can be built upon ie checks if:
