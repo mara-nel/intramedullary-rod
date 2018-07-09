@@ -9,8 +9,8 @@ var PLAYERS_PER_TEAM = 2
 var PLACE_PLAYERS = 0
 var MAIN_PLAY = 1
 
-var TEAM_ONE = 1
-var TEAM_TWO = 2
+var TEAM_ONE = 'team_one'
+var TEAM_TWO = 'team_two'
 
 
 var player
@@ -21,6 +21,7 @@ var board_coords
 var click_ctr_coords
 
 var click
+var players_turn
 
 var board_matrix
 var state
@@ -37,6 +38,7 @@ func _ready():
 	click = false
 	initialize_board_matrix()
 	state = PLACE_PLAYERS
+	players_turn = TEAM_ONE
 	no_player_is_selected()
 
 func _process(delta):
@@ -97,13 +99,15 @@ func player_is_selected():
 
 #checks if a player is in a given square, if so it makes said player
 # the 'selected' player
+#can only select play tokens corresponding to the current team
 func select_player(selected_square):
 	#iterate through all player tokens
 	for node in get_node("Players").get_children():
 		if selected_square == coord_to_board_coord(node.get_position()):
-			player = node
-			player.set_state_move()
-			player_is_selected()
+			if node.is_in_group(players_turn):
+				player = node
+				player.set_state_move()
+				player_is_selected()
 
 
 #adds a new player token of a given team to a given location
@@ -115,8 +119,10 @@ func add_player(team, spawn_location):
 	if !is_occupied:
 		var scene = load("res://Player.tscn")
 		var scene_instance = scene.instance()
-		scene_instance.set_name("new_player")
-		if team == TEAM_TWO:
+		if team == TEAM_ONE:
+			scene_instance.add_to_group(TEAM_ONE)
+		elif team == TEAM_TWO:
+			scene_instance.add_to_group(TEAM_TWO)
 			scene_instance.get_node("Sprite").set_texture(load("res://p2.png"))
 	
 		var to_build_coords = Board.map_to_world(spawn_location)
@@ -168,7 +174,14 @@ func try_to_build(square_to_build_in, selected_player_board_position):
 		pass
 	else:
 		build_floor(square_to_build_in)
-		no_player_is_selected()
+		end_turn()
+		#no_player_is_selected()
+
+# function to handle all the things that should happen when a players 
+#  turn ends
+func end_turn():
+	no_player_is_selected()
+	switch_turns()
 
 func build_floor(square_to_build_in):
 	var current_level = get_build_height(square_to_build_in)
@@ -225,6 +238,13 @@ func is_occupied_by_player(board_coord):
 		if board_coord == coord_to_board_coord(node.get_position()):
 			is_occupied = true
 	return is_occupied
+
+func switch_turns():
+	if players_turn == TEAM_ONE:
+		players_turn = TEAM_TWO
+	else:
+		players_turn = TEAM_ONE
+
 
 
 #returns true if a board_coord is too built upon to build once more
