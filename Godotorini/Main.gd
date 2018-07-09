@@ -17,8 +17,8 @@ var player
 var Board
 var cell
 
-var board_coords
-var click_ctr_coords
+#var board_coords
+
 
 var click
 var players_turn
@@ -50,42 +50,69 @@ func _input(event):
 	if event is InputEventMouseButton:
 		click = change_click()#mouseClickPos = event.positiona
 		#print("Mouse Click/Unclick at: ", event.position)
-		board_coords = Board.world_to_map(event.position)
+		var board_coords = Board.world_to_map(event.position)
 		#print(" which is in tile: ", board_coords)
-		click_ctr_coords = Board.map_to_world(board_coords)
-		#print(" with center coord: ", click_ctr_coords)
 		if click:
 			if state == PLACE_PLAYERS:
-				var number_of_players = get_node("Players").get_child_count()
-				if number_of_players < PLAYERS_PER_TEAM:
-					add_player(TEAM_ONE,board_coords)
-					print(get_node("Players").get_child_count())
-				elif number_of_players < 2*PLAYERS_PER_TEAM-1:
-					add_player(TEAM_TWO,board_coords)
-					print(get_node("Players").get_child_count())
-				else:
-					add_player(TEAM_TWO,board_coords)
-					print(get_node("Players").get_child_count())
-					state = MAIN_PLAY
-					print('state is: ',state)
+				place_players(board_coords)
 			elif state == MAIN_PLAY:
-				if !player_selected:
-					select_player(board_coords)
-					print('trying to select')
-
-				elif player.is_ready_to_move():
-					try_to_move(player, board_coords)
-					print('trying to move')
-
-				elif player.is_ready_to_build():
-					var player_board_position = Board.world_to_map(player.get_position())
-					try_to_build(board_coords, player_board_position)
-					print('trying to build')
-				#print_matrix()
+				main_play(board_coords)
 	#eventually want some sort of restart button
-	#elif event is InputEventKey:
-	#	if Input.is_key_pressed(KEY_R):
-	#		_ready() #does not do it all, will need to clear things away too
+	elif event is InputEventKey:
+		if Input.is_key_pressed(KEY_R):
+			reset_game()
+
+#function for managing the stage of the game where players put down
+# player tokens
+func place_players(clicked_coord):
+	var number_of_players = get_node("Players").get_child_count()
+	if number_of_players < PLAYERS_PER_TEAM:
+		add_player(TEAM_ONE,clicked_coord)
+		print(get_node("Players").get_child_count())
+	elif number_of_players < 2*PLAYERS_PER_TEAM-1:
+		add_player(TEAM_TWO,clicked_coord)
+		print(get_node("Players").get_child_count())
+	else:
+		add_player(TEAM_TWO,clicked_coord)
+		print(get_node("Players").get_child_count())
+		state = MAIN_PLAY
+		print('state is: ',state)
+	#print_matrix()
+
+# handles the gameplay of the actual game
+# turns alternate between players, a turn consists of:
+#  -choosing a token
+#  -moving that token to an unoccupied adjacent square
+#  -building on an unoccupied square adjacent to the moved token
+func main_play(clicked_coord):
+	if !player_selected:
+		select_player(clicked_coord)
+		print('trying to select')
+	elif player.is_ready_to_move():
+		try_to_move(player, clicked_coord)
+		print('trying to move')
+	elif player.is_ready_to_build():
+		var player_board_position = Board.world_to_map(player.get_position())
+		try_to_build(clicked_coord, player_board_position)
+		print('trying to build')
+
+# resets the game, clears board
+func reset_game():
+	click = false
+	initialize_board_matrix()
+	state = PLACE_PLAYERS
+	players_turn = TEAM_ONE
+	no_player_is_selected()
+	clear_buildings()
+	clear_players()
+func clear_buildings():
+	for node in get_tree().get_nodes_in_group("building"):
+		node.queue_free()
+func clear_players():
+	for node in get_node("Players").get_children():
+		node.queue_free()
+
+
 
 #used to help distinguish between down click and unclick of the mouse
 func change_click():
@@ -140,7 +167,7 @@ func try_to_move(player, board_coord):
 	#iterate through all player tokens
 	#space_occupied = is_occupied_by_player(board_coord)
 
-	if !are_neighbors(board_coords,player_board_coord):
+	if !are_neighbors(board_coord,player_board_coord):
 		pass
 	elif move_to_height - current_height > 1:
 		pass
@@ -187,33 +214,23 @@ func end_turn():
 
 func build_floor(square_to_build_in):
 	var current_level = get_build_height(square_to_build_in)
+	var scene = load("res://Building.tscn")
+	var scene_instance = scene.instance()
+	scene_instance.set_name("new_floor")
+	var to_build_coords = Board.map_to_world(square_to_build_in)
+	scene_instance.set_position(to_build_coords)
+	
 	if current_level == 0:
-		var scene = load("res://BottomFloor.tscn")
-		var scene_instance = scene.instance()
-		scene_instance.set_name("new_floor")
-		var to_build_coords = Board.map_to_world(square_to_build_in)
-		scene_instance.set_position(to_build_coords)
+		scene_instance.get_node("Sprite").set_texture(load("res://b1.png"))
 		get_node("Level_1").add_child(scene_instance)
 	elif current_level == 1:
-		var scene = load("res://Floor_2.tscn")
-		var scene_instance = scene.instance()
-		scene_instance.set_name("new_floor")
-		var to_build_coords = Board.map_to_world(square_to_build_in)
-		scene_instance.set_position(to_build_coords)
+		scene_instance.get_node("Sprite").set_texture(load("res://floor_2.png"))
 		get_node("Level_2").add_child(scene_instance)
 	elif current_level == 2:
-		var scene = load("res://Level_3.tscn")
-		var scene_instance = scene.instance()
-		scene_instance.set_name("new_floor")
-		var to_build_coords = Board.map_to_world(square_to_build_in)
-		scene_instance.set_position(to_build_coords)
+		scene_instance.get_node("Sprite").set_texture(load("res://floor_3.png"))
 		get_node("Level_3").add_child(scene_instance)
 	elif current_level == 3:
-		var scene = load("res://Cap.tscn")
-		var scene_instance = scene.instance()
-		scene_instance.set_name("new_floor")
-		var to_build_coords = Board.map_to_world(square_to_build_in)
-		scene_instance.set_position(to_build_coords)
+		scene_instance.get_node("Sprite").set_texture(load("res://cap.png"))
 		get_node("Caps").add_child(scene_instance)
 	
 	
