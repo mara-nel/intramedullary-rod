@@ -5,7 +5,7 @@ onready var ballSpawnPt = get_node("ballSpawn")
 
 var LEFT = Vector2(-1,0)
 var RIGHT = Vector2(1,0)
-var moveSpeed = 100
+var moveSpeed = 125
 
 
 func _ready():
