@@ -153,7 +153,7 @@ func undo_last_move():
 		counter = 0
 		for node in get_node("Players").get_children():
 			var old_pos = Board.map_to_world(last_move[counter])
-			node.set_position(old_pos)
+			node.move(old_pos)
 			counter +=1
 		no_player_is_selected()
 	#pop off last recorded and set everything to the last
@@ -166,21 +166,14 @@ func undo_last_move():
 		counter = 0
 		for node in get_node("Players").get_children():
 			var old_pos = Board.map_to_world(last_move[counter])
-			node.set_position(old_pos)
+			node.move(old_pos)
 			counter +=1
 		no_player_is_selected()
 		switch_turns()
 		
 func remove_last_building_of_height(given_height):
 	var level_dict = {1:"Level_1", 2:"Level_2", 3:"Level_3", 4:"Caps"}
-#	if given_height == 1:
-#		level = "Level_1"
-#	elif given_height == 2:
-#		level = "Level_2"
-#	elif
 	get_node(level_dict[given_height]).get_children()[-1].queue_free()
-
-
 
 
 #used to help distinguish between down click and unclick of the mouse
@@ -210,7 +203,6 @@ func select_player(selected_square):
 #currently doesn't look at team
 func add_player(team, spawn_location):
 	var is_occupied = is_occupied_by_player(spawn_location)
-	#is_occupied = is_occupied_by_player(spawn_location)
 	
 	if !is_occupied:
 		var scene = load("res://Player.tscn")
