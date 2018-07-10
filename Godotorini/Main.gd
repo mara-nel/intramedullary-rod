@@ -80,11 +80,11 @@ func place_players(clicked_coord):
 		add_player(TEAM_TWO,clicked_coord)
 		print(get_node("Players").get_child_count())
 	else:
-		add_player(TEAM_TWO,clicked_coord)
+		if add_player(TEAM_TWO,clicked_coord):
+			state = MAIN_PLAY
+			print('state is: ',state)
+			record_move(Vector2(-1,-1))
 		print(get_node("Players").get_child_count())
-		state = MAIN_PLAY
-		print('state is: ',state)
-		record_move(Vector2(-1,-1))
 	#print_matrix()
 
 # handles the gameplay of the actual game
@@ -223,6 +223,7 @@ func add_player(team, spawn_location):
 		scene_instance.set_position(to_build_coords)
 	
 		get_node("Players").add_child(scene_instance)
+	return !is_occupied
 	
 
 func try_to_move(player, board_coord):
