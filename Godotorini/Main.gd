@@ -113,6 +113,8 @@ func reset_game():
 	no_player_is_selected()
 	clear_buildings()
 	clear_players()
+	recorded_moves = []
+
 func clear_buildings():
 	for node in get_tree().get_nodes_in_group("building"):
 		node.queue_free()
