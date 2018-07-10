@@ -63,6 +63,11 @@ func _input(event):
 		elif Input.is_key_pressed(KEY_P):
 			#print_player_locations()
 			print_recorded_moves()
+			#print_last_recorded_move()
+		elif Input.is_key_pressed(KEY_M):
+			print_matrix()
+		elif Input.is_key_pressed(KEY_U):
+			undo_last_move()
 
 #function for managing the stage of the game where players put down
 # player tokens
@@ -119,11 +124,14 @@ func clear_players():
 func print_player_locations():
 	for node in get_node("Players").get_children():
 		print(coord_to_board_coord(node.get_position()))
+func print_last_recorded_move():
+	print(recorded_moves[-1])
+
+
 
 func print_recorded_moves():
 	for x in recorded_moves:
 		print(x)
-
 
 func record_move(coord_of_last_build):
 	var last_move = []
@@ -131,6 +139,46 @@ func record_move(coord_of_last_build):
 		last_move.append( coord_to_board_coord(node.get_position()) )
 	last_move.append( coord_of_last_build )
 	recorded_moves.append(last_move)
+
+#hit once should revert to last recorded move
+#hit twice should remove last move and revert to new last recorded 
+func undo_last_move():
+	#if a player is selected, then in middle of a turn, revert to its start
+	var last_move = recorded_moves[-1]
+	var counter
+	if player_selected:
+		#nothing will be built yet, so don't need to worry about removing a building
+		counter = 0
+		for node in get_node("Players").get_children():
+			var old_pos = Board.map_to_world(last_move[counter])
+			node.set_position(old_pos)
+			counter +=1
+		no_player_is_selected()
+	#pop off last recorded and set everything to the last
+	elif recorded_moves.size() >= 2:
+		var height_of_last_built = get_build_height(last_move[-1])
+		remove_last_building_of_height(height_of_last_built)
+		undo_board_matrix(last_move[-1])
+		recorded_moves.pop_back()
+		last_move = recorded_moves[-1]
+		counter = 0
+		for node in get_node("Players").get_children():
+			var old_pos = Board.map_to_world(last_move[counter])
+			node.set_position(old_pos)
+			counter +=1
+		no_player_is_selected()
+		switch_turns()
+		
+func remove_last_building_of_height(given_height):
+	var level_dict = {1:"Level_1", 2:"Level_2", 3:"Level_3", 4:"Caps"}
+#	if given_height == 1:
+#		level = "Level_1"
+#	elif given_height == 2:
+#		level = "Level_2"
+#	elif
+	get_node(level_dict[given_height]).get_children()[-1].queue_free()
+
+
 
 
 #used to help distinguish between down click and unclick of the mouse
@@ -305,6 +353,11 @@ func update_board_matrix(board_coord):
 	var coord_x = board_coord[0]
 	var coord_y = board_coord[1]
 	board_matrix[coord_y][coord_x] += 1
+	
+func undo_board_matrix(board_coord):
+	var coord_x = board_coord[0]
+	var coord_y = board_coord[1]
+	board_matrix[coord_y][coord_x] -= 1
 
 func initialize_board_matrix():
 	board_matrix = []
