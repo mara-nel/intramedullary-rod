@@ -1,8 +1,5 @@
 extends Node
 
-# class member variables go here, for example:
-# var a = 2
-# var b = "textvar"
 var MAX_HEIGHT = 4
 var PLAYERS_PER_TEAM = 2
 
@@ -12,6 +9,7 @@ var MAIN_PLAY = 1
 var TEAM_ONE = 'team_one'
 var TEAM_TWO = 'team_two'
 
+var recorded_moves
 
 var player
 var Board
@@ -40,6 +38,7 @@ func _ready():
 	state = PLACE_PLAYERS
 	players_turn = TEAM_ONE
 	no_player_is_selected()
+	recorded_moves = []
 
 func _process(delta):
 	# Called every frame. Delta is time since last frame.
@@ -61,6 +60,9 @@ func _input(event):
 	elif event is InputEventKey:
 		if Input.is_key_pressed(KEY_R):
 			reset_game()
+		elif Input.is_key_pressed(KEY_P):
+			#print_player_locations()
+			print_recorded_moves()
 
 #function for managing the stage of the game where players put down
 # player tokens
@@ -77,6 +79,7 @@ func place_players(clicked_coord):
 		print(get_node("Players").get_child_count())
 		state = MAIN_PLAY
 		print('state is: ',state)
+		record_move(Vector2(-1,-1))
 	#print_matrix()
 
 # handles the gameplay of the actual game
@@ -112,6 +115,22 @@ func clear_players():
 	for node in get_node("Players").get_children():
 		node.queue_free()
 
+#mostly for testing purposes
+func print_player_locations():
+	for node in get_node("Players").get_children():
+		print(coord_to_board_coord(node.get_position()))
+
+func print_recorded_moves():
+	for x in recorded_moves:
+		print(x)
+
+
+func record_move(coord_of_last_build):
+	var last_move = []
+	for node in get_node("Players").get_children():
+		last_move.append( coord_to_board_coord(node.get_position()) )
+	last_move.append( coord_of_last_build )
+	recorded_moves.append(last_move)
 
 
 #used to help distinguish between down click and unclick of the mouse
@@ -203,14 +222,16 @@ func try_to_build(square_to_build_in, selected_player_board_position):
 		pass
 	else:
 		build_floor(square_to_build_in)
-		end_turn()
+		end_turn(square_to_build_in)
 		#no_player_is_selected()
 
 # function to handle all the things that should happen when a players 
 #  turn ends
-func end_turn():
+func end_turn(coord_of_last_build):
+	record_move(coord_of_last_build)
 	no_player_is_selected()
 	switch_turns()
+	
 
 func build_floor(square_to_build_in):
 	var current_level = get_build_height(square_to_build_in)

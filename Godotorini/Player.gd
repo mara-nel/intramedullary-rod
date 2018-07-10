@@ -1,6 +1,6 @@
 extends Area2D
 
-export (int) var SPEED
+export (int) var TEAM
 
 var screensize
 var tile_size = 64
@@ -19,6 +19,8 @@ func _ready():
 	# Initialization here
 	screensize = get_viewport_rect().size
 	state = validStates[0]
+	if TEAM == 2:
+		get_node("Sprite").set_texture(load("res://p2.png"))
 
 
 func move(location):
