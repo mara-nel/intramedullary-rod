@@ -1,0 +1,150 @@
+extends Node
+
+# class member variables go here, for example:
+# var a = 2
+# var b = "textvar"
+# Directions
+var DOWN = Vector2(0,1)
+var RIGHT = Vector2(1,0)
+var LEFT = Vector2(-1,0)
+
+var boardArray = []
+var BOARD_WIDTH = 10
+var BOARD_HEIGHT = 22
+
+var squareSize = 16
+
+var testBlock
+
+var gravityCheck = 15
+var running = 0
+var FALL_LOCK = 3
+var timeOnFloor = 0 
+
+
+func _ready():
+	makeBoard()
+
+	#print(boardArray)
+	
+	new_block()
+	# Called every time the node is added to the scene.
+	# Initialization here
+	pass
+
+func _process(delta):
+	# Called every frame. Delta is time since last frame.
+	# Update game logic here.
+	running += 1
+	if running >= gravityCheck:
+		running = 0
+		if !move(DOWN, testBlock):
+			timeOnFloor +=1
+			if timeOnFloor >= FALL_LOCK:
+				new_block()
+				timeOnFloor = 0
+		
+
+func _input(event):
+	if event is InputEventMouseButton:
+		pass
+	#eventually want some sort of restart button
+	elif event is InputEventKey:
+#		if Input.is_key_pressed(KEY_R):
+#			reset_game()
+#		elif Input.is_key_pressed(KEY_P):
+#			#print_player_locations()
+#			print_recorded_moves()
+#			#print_last_recorded_move()
+#		elif Input.is_key_pressed(KEY_M):
+#			print_matrix()
+#		elif Input.is_key_pressed(KEY_U):
+#			undo_last_move()
+		if Input.is_key_pressed(KEY_DOWN):
+			#print('down?')
+			move(DOWN, testBlock)
+		elif Input.is_key_pressed(KEY_RIGHT):
+			#print('down?')
+			move(RIGHT, testBlock)
+		elif Input.is_key_pressed(KEY_LEFT):
+			#print('down?')
+			move(LEFT, testBlock)
+		elif Input.is_key_pressed(KEY_P):
+			printBoard()
+
+#THOUGHT: pieces can be added to groups -> could be useful for making squares
+func new_block():
+	var scene = load("res://Square.tscn")
+	var scene_instance = scene.instance()
+	get_node("blocks").add_child(scene_instance)
+	testBlock = scene_instance
+	testBlock.set_square_size(squareSize)
+	testBlock.set_board_position(Vector2(5,0))
+
+
+
+
+func move(direction, piece):
+	var old_pos = piece.get_position()
+	var change = direction*squareSize
+	if can_move(direction, piece):
+		piece.set_position(old_pos + change)
+		update_board()
+		return true
+	else:
+		return false
+
+
+func can_move(direction, piece):
+	var new_position = piece.get_board_position() + direction
+	if !off_board(new_position):
+		if !board_occupied(new_position):
+			return true 
+	else:
+		return false
+		
+	
+func off_board(new_position):
+	if new_position.x <0:
+		return true 
+	elif new_position.x > BOARD_WIDTH-1:
+		return true
+	elif new_position.y > BOARD_HEIGHT-1:
+		return true
+	else:
+		return false
+		
+
+func board_occupied(new_position):
+	if boardArray[new_position.y][new_position.x] != 0:
+		#print('occupied')
+		return true
+	else:
+		return false
+
+
+
+
+func update_board():
+	makeBoard() #zeros it out
+	for piece in get_node("blocks").get_children():
+		var pieceCoord = piece.get_board_position()
+		boardArray[pieceCoord[1]][pieceCoord[0]] = 1
+
+
+
+# Constructs the boardArray to be the size of our play field
+# Calling boardArray[row][col] returns the element that lives in the 
+#  row-th row from the top and the col-th column from the left
+func makeBoard():
+	boardArray = [] #makes sure the board is empty
+	for x in range(0,BOARD_HEIGHT):
+		var row = []
+		for y in range(0,BOARD_WIDTH):
+			row.append(0)
+		boardArray.append(row)
+	
+func printBoard():
+	print("---------------------------")
+	for x in range(0,BOARD_HEIGHT):
+		print(boardArray[x])
