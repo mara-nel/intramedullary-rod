@@ -50,16 +50,9 @@ func _input(event):
 		pass
 	#eventually want some sort of restart button
 	elif event is InputEventKey:
-#		if Input.is_key_pressed(KEY_R):
-#			reset_game()
-#		elif Input.is_key_pressed(KEY_P):
-#			#print_player_locations()
-#			print_recorded_moves()
-#			#print_last_recorded_move()
-#		elif Input.is_key_pressed(KEY_M):
-#			print_matrix()
-#		elif Input.is_key_pressed(KEY_U):
-#			undo_last_move()
+		#META: I question if I need to be passing along testBlock, there
+		#	could just be a single live piece and these functions just apply
+		#	to the live piece
 		if Input.is_key_pressed(KEY_DOWN):
 			#print('down?')
 			move(DOWN, testBlock)
@@ -69,8 +62,12 @@ func _input(event):
 		elif Input.is_key_pressed(KEY_LEFT):
 			#print('down?')
 			move(LEFT, testBlock)
-		elif Input.is_key_pressed(KEY_P):
+		
+		if Input.is_key_pressed(KEY_P):
 			printBoard()
+			
+		if Input.is_key_pressed(KEY_SPACE):
+			drop(testBlock)
 
 #THOUGHT: pieces can be added to groups -> could be useful for making squares
 func new_block():
@@ -94,7 +91,6 @@ func move(direction, piece):
 	else:
 		return false
 
-
 func can_move(direction, piece):
 	var new_position = piece.get_board_position() + direction
 	if !off_board(new_position):
@@ -103,6 +99,13 @@ func can_move(direction, piece):
 	else:
 		return false
 		
+	
+func drop(piece):
+	while(move(DOWN,piece)):
+		pass
+	new_block()
+	
+	
 	
 func off_board(new_position):
 	if new_position.x <0:
