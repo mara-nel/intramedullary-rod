@@ -8,6 +8,10 @@ var DOWN = Vector2(0,1)
 var RIGHT = Vector2(1,0)
 var LEFT = Vector2(-1,0)
 
+# Values of entries in boardArray
+var EMPTY = 0
+
+
 var boardArray = []
 var BOARD_WIDTH = 10
 var BOARD_HEIGHT = 22
@@ -41,7 +45,7 @@ func _process(delta):
 		if !move(DOWN, testBlock):
 			timeOnFloor +=1
 			if timeOnFloor >= FALL_LOCK:
-				new_block()
+				piece_locked()
 				timeOnFloor = 0
 		
 
@@ -77,8 +81,33 @@ func new_block():
 	testBlock = scene_instance
 	testBlock.set_square_size(squareSize)
 	testBlock.set_board_position(Vector2(5,0))
+	
+# does everything that should be done once a piece gets locked in
+func piece_locked():
+	check_for_lines()
 
+	new_block()
 
+func check_for_lines():
+	for i in range(0,BOARD_HEIGHT):
+		var row = boardArray[i]
+		var space = false
+		for entry in row:
+			if entry == EMPTY:
+				space = true
+		if !space:
+			print('line full')
+			clear_row(i)
+
+func clear_row(row):
+	#need to clear pieces
+	for piece in get_node("blocks").get_children():
+		var pieceCoord = piece.get_board_position()
+		if pieceCoord[1] == row:
+			piece.queue_free()
+		elif pieceCoord[1] < row:
+			piece.set_board_position(pieceCoord + DOWN)
+	update_board()
 
 
 func move(direction, piece):
@@ -103,7 +132,7 @@ func can_move(direction, piece):
 func drop(piece):
 	while(move(DOWN,piece)):
 		pass
-	new_block()
+	piece_locked()
 	
 	
 	
@@ -144,10 +173,29 @@ func makeBoard():
 	for x in range(0,BOARD_HEIGHT):
 		var row = []
 		for y in range(0,BOARD_WIDTH):
-			row.append(0)
+			row.append(EMPTY)
 		boardArray.append(row)
 	
 func printBoard():
 	print("---------------------------")
 	for x in range(0,BOARD_HEIGHT):
 		print(boardArray[x])
+		
+		
+
+
+func new_piece():
+	#choose what it'll be
+	#construct it
+	#set it to the active piece
+	pass
+
+
+var I = [
+		[0, 0, 0, 0],
+		[1, 1, 1, 1],
+		[0, 0, 0, 0],
+		[0, 0, 0, 0]
+	]
+
+var pieces = [I]
